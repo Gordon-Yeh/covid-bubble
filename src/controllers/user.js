@@ -1,7 +1,7 @@
 'use strict';
 const Database = require('../db');
-const { LOG } = require('../log');
-const id = require('../util/id');
+const { LOG } = require('../utils/log');
+const id = require('../utils/id');
 var db = new Database();
 
 async function createUser(email, password, first_name, last_name) {

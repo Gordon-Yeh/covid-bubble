@@ -3,10 +3,10 @@
 const assert = require('assert');
 const sinon = require('sinon');
 const Database = require('../db');
-const id = require('../util/id');
+const id = require('../utils/id');
 const userController = require('./user');
 
-describe('controllers.user', function() {
+describe('controllers/user', function() {
   afterEach(function() {
     sinon.restore();
   })

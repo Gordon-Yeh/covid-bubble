@@ -5,7 +5,8 @@
   "main": "handler.js",
   "dependencies": {
     "mysql": "^2.18.1",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.0",
+    "validator": "^13.1.1"
   },
   "devDependencies": {
     "mocha": "^8.1.3",
