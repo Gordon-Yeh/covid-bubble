@@ -1,14 +1,14 @@
 'use strict';
 const Database = require('../db');
 const { LOG } = require('../log');
-const { v4: uuid } = require('uuid');
+const id = require('../util/id');
 var db = new Database();
 
 async function createUser(email, password, first_name, last_name) {
   LOG('createUser:', `adding new user with email=${email}, password=${password}, firstName=${first_name}, lastName=${last_name}`);
 
   let newUser = {
-    user_id: 'user_id1',
+    user_id: id.genUserId(),
     email: email,
     password,
     first_name,
@@ -20,7 +20,7 @@ async function createUser(email, password, first_name, last_name) {
     return results;
   } catch (e) {
     LOG('createUser:', 'error while querying db', e);
-    throw e;
+    throw new Error('database_error');
   }
 }
 
