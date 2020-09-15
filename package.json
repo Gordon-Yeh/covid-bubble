@@ -1,0 +1,18 @@
+{
+  "name": "covid-bubble-serverless",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "dependencies": {
+    "mysql": "^2.18.1",
+    "uuid": "^8.3.0"
+  },
+  "devDependencies": {
+    "serverless-offline": "^6.7.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
