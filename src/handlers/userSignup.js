@@ -16,8 +16,8 @@ async function handler(event) {
     };
   } catch (e) {
     return {
-      statusCode: 400,
-      message: e.message
+      statusCode: 500,
+      message: 'internal_server_error'
     };
   }
 };
