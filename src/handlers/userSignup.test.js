@@ -48,4 +48,4 @@ describe('handlers/userSignup', function() {
       assert.equal(res.message, 'internal_server_error');
     });
   });
-})
+});

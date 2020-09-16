@@ -1,24 +1,21 @@
 'use strict';
 const user = require('../controllers/user');
+const response = require('../models/response');
 const { LOG } = require('../utils/log');
 
 async function handler(event) {
-  let body = JSON.parse(event.body);
-  LOG('event body', body);
+  LOG('event body', event.body);
 
   try {
+    // let body = validUserSignup(event.body);
+    let body = JSON.parse(event.body);
     let result = await user.createUser(body.email, body.password, body.firstName, body.lastName);
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        user: result
-      })
-    };
+    return new response.Success({ user: result });
   } catch (e) {
-    return {
-      statusCode: 500,
-      message: 'internal_server_error'
-    };
+    if (e.name === 'validation')
+      return new response.Failure(400, e.message);
+    else
+      return new response.Failure(500, 'internal_server_error');
   }
 };
 
