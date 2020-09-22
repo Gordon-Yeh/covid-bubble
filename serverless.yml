@@ -84,6 +84,13 @@ functions:
           path: user/signup
           method: post
 
+  login:
+    handler: src/handlers/login.handler
+    events:
+      - http:
+          path: user/login
+          method: post
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details

@@ -2,6 +2,7 @@
 
 const validator = require('validator');
 const { ValidationError } = require('../utils/error')
+const { LOG } = require('../utils/log');
 
 function userSignup(body) {
   body = parseBody(body);
@@ -16,6 +17,26 @@ function userSignup(body) {
     errors.push('invalid_firstname');
   if (!body.lastName || !validator.isAlphanumeric(body.lastName))
     errors.push('invalid_lastname');
+  if (!body.password || body.password.length < 8)
+    errors.push('invalid_password');
+
+  if (errors.length > 0) {
+    LOG('bodyValidator.userSignup()', 'errors found:', errors);
+    throw ValidationError(JSON.stringify(errors));
+  }
+  
+  return sanitize(body);
+}
+
+function login(body) {
+  body = parseBody(body);
+  if (!body) {
+    throw ValidationError(JSON.stringify(['invalid_body']));
+  }
+
+  let errors = [];
+  if (!body.email || !validator.isEmail(body.email))
+    errors.push('invalid_email');
   if (!body.password || body.password.length < 8)
     errors.push('invalid_password');
 
@@ -50,5 +71,6 @@ function sanitize(obj) {
 
 module.exports = {
   userSignup,
-  sanitize
+  sanitize,
+  login
 };

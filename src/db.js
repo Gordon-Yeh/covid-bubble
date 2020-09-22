@@ -28,7 +28,7 @@ class Database {
       this.db.query(...args, (err, res, fields) => {
         if (err)
           reject(err);
-        resolve(res, fields);
+        resolve(res);
       });
     })
   }
@@ -39,8 +39,8 @@ class Database {
     })
   }
 
-  escape(text) {
-    return this.db.escape(text);
+  isDupEmailError(err) {
+    return err && err.message && err.message.includes('ER_DUP_ENTRY') && err.message.includes('email');
   }
 }
 

@@ -7,7 +7,7 @@ function Success(body) {
 
 function Failure(status, message) {
   this.statusCode = status;
-  this.message = message;
+  this.body = JSON.stringify({ message });
 }
 
 module.exports = {

@@ -13,5 +13,5 @@ docker run \
   --name $DB_DOCKER_INSTANCE_NAME \
   -e MYSQL_DATABASE=$DB_NAME \
   -e MYSQL_ROOT_PASSWORD=$ROOT_PW \
-  -p 3306:3306 \
+  -p 9000:3306 \
   -d $IMAGE

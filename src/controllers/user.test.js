@@ -27,14 +27,14 @@ describe('controllers/user', function() {
       await userController.createUser('test_email', 'test_password', 'test_first_name', 'test_last_name');
 
       sinon.assert.calledWith(dbQueryStub,
-        'INSERT INTO Users SET ?',
-        {
-          user_id: 'test_user_id',
-          email: 'test_email',
-          password: 'test_password',
-          first_name: 'test_first_name',
-          last_name: 'test_last_name'
-        }
+        'INSERT INTO Users VALUES (?, ?, ?, ?, ?)',
+        [
+          'test_user_id',
+          'test_email',
+          'test_first_name',
+          'test_last_name',
+          'test_password'
+        ]
       );
     });
 
@@ -50,4 +50,10 @@ describe('controllers/user', function() {
       }
     });
   });
+
+  describe('#login()', function() {
+    it('should call db query', function() {
+
+    });
+  })
 });

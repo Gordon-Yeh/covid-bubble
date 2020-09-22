@@ -1,9 +1,15 @@
 'use strict';
 
 function ValidationError(message) {
-  let e = new Error(message);
-  e.name = 'validation';
-  return e;
+  return CustomError('validation', message);
+}
+
+function AuthError(message) {
+  return CustomError('unauthentication', message);
+}
+
+function DBError(message) {
+  return CustomError('database', message)
 }
 
 function CustomError(name, message) {
@@ -14,5 +20,7 @@ function CustomError(name, message) {
 
 module.exports = {
   ValidationError,
-  CustomError
+  CustomError,
+  AuthError,
+  DBError
 }

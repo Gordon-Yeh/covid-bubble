@@ -14,6 +14,7 @@
     "sinon": "^9.0.3"
   },
   "scripts": {
+    "start": "sls offline --stage local",
     "test": "mocha src/**/*.test.js"
   },
   "author": "",
