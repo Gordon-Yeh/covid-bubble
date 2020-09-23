@@ -121,13 +121,72 @@ describe('controllers/node', function() {
     it('should call db.query with the correct arguments', async function() {
       let userId = 'main_user';
       let dbQueryStub = sinon.stub(Database.prototype, 'query');
-      dbQueryStub.resolves('success');
+      dbQueryStub.resolves([]);
       let result = await controller.getConnections('main_user');
       sinon.assert.calledWith(dbQueryStub,
-        'SELECT c.connection_id, c.name, u.username FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id) UNION SELECT c.connection_id, c.name, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;',
+        'SELECT c.connection_id, c.name, u.username, u.user_id FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id) UNION SELECT c.connection_id, c.name, NULL, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;',
         [ userId, userId, userId ]
       );
-      assert.equal(result, 'success');
+    });
+
+    it('should traverse through the graph and return the results', async function() {
+      let userId = 'main_user';
+      let dbQueryStub = sinon.stub(Database.prototype, 'query');
+      dbQueryStub.onCall(0).resolves([
+        { user_id: 'userid_1', name: 'name_1', username: 'username_1' },
+        { user_id: 'userid_2', name: 'name_2', username: 'username_2' },
+        { user_id: 'userid_3', name: 'name_3', username: 'username_3' },
+      ]);
+      dbQueryStub.onCall(1).resolves([]);
+      dbQueryStub.onCall(2).resolves([]);
+      dbQueryStub.onCall(3).resolves([
+        { user_id: 'userid_4', name: 'name_4', username: 'username_4' },
+        { user_id: 'main_user', name: 'main_name', username: 'main_username' }
+      ]);
+      dbQueryStub.onCall(4).resolves([
+        { user_id: 'userid_5', name: 'name_5', username: 'username_5' },
+        { user_id: 'main_user', name: 'main_name', username: 'main_username' },
+        { user_id: 'userid_2', name: 'name_2', username: 'username_2' }
+      ]);
+      dbQueryStub.onCall(5).resolves([ { name: 'unlined_con_1' } ]);
+      let result = await controller.getConnections('main_user');
+      assert.equal(dbQueryStub.callCount, 6);
+      sinon.assert.calledWith(dbQueryStub,
+        'SELECT c.connection_id, c.name, u.username, u.user_id FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id) UNION SELECT c.connection_id, c.name, NULL, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;',
+        [ userId, userId, userId ]
+      );
+      sinon.assert.calledWith(dbQueryStub,
+        'SELECT c.connection_id, c.name, u.username, u.user_id FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id) UNION SELECT c.connection_id, c.name, NULL, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;',
+        [ 'userid_1', 'userid_1', 'userid_1' ]
+      );
+      sinon.assert.calledWith(dbQueryStub,
+        'SELECT c.connection_id, c.name, u.username, u.user_id FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id) UNION SELECT c.connection_id, c.name, NULL, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;',
+        [ 'userid_2', 'userid_2', 'userid_2' ]
+      );
+      sinon.assert.calledWith(dbQueryStub,
+        'SELECT c.connection_id, c.name, u.username, u.user_id FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id) UNION SELECT c.connection_id, c.name, NULL, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;',
+        [ 'userid_3', 'userid_3', 'userid_3' ]
+      );
+      sinon.assert.calledWith(dbQueryStub,
+        'SELECT c.connection_id, c.name, u.username, u.user_id FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id) UNION SELECT c.connection_id, c.name, NULL, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;',
+        [ 'userid_4', 'userid_4', 'userid_4' ]
+      );
+      sinon.assert.calledWith(dbQueryStub,
+        'SELECT c.connection_id, c.name, u.username, u.user_id FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id) UNION SELECT c.connection_id, c.name, NULL, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;',
+        [ 'userid_5', 'userid_5', 'userid_5' ]
+      );
+      assert.deepEqual(result, {
+        'main_user': [
+          { name: 'name_1', username: 'username_1', userId: 'userid_1' },
+          { name: 'name_2', username: 'username_2', userId: 'userid_2' },
+          { name: 'name_3', username: 'username_3', userId: 'userid_3' },
+        ],
+        'userid_1': [],
+        'userid_2': [],
+        'userid_3': [ { name: 'name_4', username: 'username_4', userId: 'userid_4' } ],
+        'userid_4': [ { name: 'name_5', username: 'username_5', userId: 'userid_5' } ],
+        'userid_5': [ { name: 'unlined_con_1', username: null, userId: null } ]
+      });
     });
   }); // #getConnections()
 });

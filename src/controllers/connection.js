@@ -35,12 +35,39 @@ async function addConnections(userId, connections) {
 
 async function getConnections(userId) {
   LOG('nodes.getConnections():', `users=${userId}`);
-  let sql = 'SELECT c.connection_id, c.name, u.username FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id)'
-            + ' UNION ' + 'SELECT c.connection_id, c.name, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;';
+  let sql = 'SELECT c.connection_id, c.name, u.username, u.user_id FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id)'
+            + ' UNION ' + 'SELECT c.connection_id, c.name, NULL, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;';
+  let adjList = {};
+  let queue = [ userId ];
+  let visited = new Set();
+
   try {
-    let res = await db.query(sql, [userId, userId, userId]);
-    return res;
+    visited.add(userId);
+    while (queue.length > 0) {
+      let parent = queue.shift();
+      let res = await db.query(sql, [parent, parent, parent]);
+      adjList[parent] = [];
+      res.forEach(con => {
+        if (con.user_id != null && !visited.has(con.user_id)) {
+          adjList[parent].push({
+            name: con.name,
+            username: con.username,
+            userId: con.user_id
+          });
+          visited.add(con.user_id);
+          queue.push(con.user_id);
+        } else if (con.user_id == null) {
+          adjList[parent].push({
+            name: con.name,
+            username: null,
+            userId: null
+          });
+        }
+      });
+    }
+    return adjList;
   } catch (e) {
+    LOG(e);
     throw DBError('database_error');
   }
 }

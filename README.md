@@ -76,3 +76,37 @@ connection/add:
       status: 500
       body:
         message: 'internal_server_error'
+
+connection/get:
+  request:
+    body:
+      userId
+  respond:
+    status: 200
+    body: {
+      connections: [
+        { name: 'xxxx', 
+          connections: 
+            [
+              [
+                [], 
+                [],
+                []
+              ]
+              
+            ] }
+      ]
+    }
+  errors:
+    badRequest:
+      status: 400
+      body:
+        message: [ 'invalid_email' | 'invalid_password' ]
+    badCredentials:
+      status: 401
+      body:
+        message: 'invalid_credentials'
+    internalError:
+      status: 500
+      body:
+        message: 'internal_server_error'

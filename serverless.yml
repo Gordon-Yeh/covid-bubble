@@ -95,8 +95,15 @@ functions:
     handler: src/handlers/addConnection.handler
     events:
       - http:
-          path: connection/add
+          path: /connection/add/{userId}
           method: post
+  
+  getConnections:
+    handler: src/handlers/getConnections.handler
+    events:
+      - http:
+          path: /connection/get/{userId}
+          method: get
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

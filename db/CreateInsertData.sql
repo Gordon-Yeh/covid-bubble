@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS Connections (
   connection_id VARCHAR(255) PRIMARY KEY,
   user_a VARCHAR(255) NOT NULL,
   user_b VARCHAR(255),
-  name VARCHAR(255),
+  name VARCHAR(255) NOT NULL,
   FOREIGN KEY(user_a) REFERENCES Users(user_id) ON DELETE CASCADE,
   FOREIGN KEY(user_b) REFERENCES Users(user_id) ON DELETE CASCADE,
   UNIQUE(user_a, user_b),
@@ -20,6 +20,21 @@ CREATE TABLE IF NOT EXISTS Connections (
 );
 
 INSERT INTO Users (user_id, email, first_name, last_name, password, username) VALUES
-    ('f599906e-bb86-47bd-99be-4f6436eaec41', 'joe@gmail.com', 'Joe', 'Smith', '123123123', 'joe_smith'),
-    ('afe4a1ee-b802-43c6-b489-4c63d03f632f', 'john@gmail.com', 'John', 'Doe', '123123123', 'john_doe'),
-    ('7eb22b80-3f16-4317-b374-f957394345c8', 'bill@gmail.com', 'Bill', 'Nye', '123123123', 'bill_nye');
+    ('joe_id', 'joe@gmail.com', 'Joe', 'Smith', '123123123', 'joe_smith'),
+    ('john_id', 'john@gmail.com', 'John', 'Doe', '123123123', 'john_doe'),
+    ('bill_id', 'bill@gmail.com', 'Bill', 'Nye', '123123123', 'bill_nye'),
+    ('jill_id', 'jill@gmail.com', 'Jill', 'Old', '123123123', 'jill_old'),
+    ('jen_id', 'jen@gmail.com', 'Jen', 'Hong', '123123123', 'jen_hong'),
+    ('tom_id', 'tom@gmail.com', 'Tom', 'Lee', '123123123', 'tom_lee'),
+    ('jack_id', 'jack@gmail.com', 'Jack', 'Johnson', '123123123', 'jack_johnson');
+
+INSERT INTO Connections (connection_id, user_a, user_b, name) VALUES
+    ('connection_1', 'tom_id', 'joe_id', 'tom_joe'),
+    ('connection_2', 'tom_id', 'jen_id', 'tom_jen'),
+    ('connection_3', 'tom_id', 'jack_id', 'tom_jack'), 
+    ('connection_4', 'joe_id', 'jill_id', 'joe_jill'), 
+    ('connection_5', 'jack_id', 'jen_id', 'jack_jen'), 
+    ('connection_6', 'jen_id', 'john_id', 'jen_john'), 
+    ('connection_7', 'john_id', 'jack_id', 'john_jack');
+
+
