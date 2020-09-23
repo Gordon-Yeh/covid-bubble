@@ -17,6 +17,8 @@ function userSignup(body) {
     errors.push('invalid_firstname');
   if (!body.lastName || !validator.isAlphanumeric(body.lastName))
     errors.push('invalid_lastname');
+  if (!body.username || !validator.isAlphanumeric(body.username))
+    errors.push('invalid_username');
   if (!body.password || body.password.length < 8)
     errors.push('invalid_password');
 
@@ -46,6 +48,28 @@ function login(body) {
   return sanitize(body);
 }
 
+function addConnections(body) {
+  body = parseBody(body);
+  if (!body) {
+    throw ValidationError(JSON.stringify(['invalid_body']));
+  }
+
+  for (let i = 0; i < body.connections.length; i++) {
+    let c = body.connections[i];
+    // TODO: handle case where user is connecting to themselves
+    LOG('bodyValidator.addConnections():', 'checking connection:', c);
+    if (!c.name || !isName(c.name))
+      throw ValidationError(JSON.stringify(['invalid_connection_name']));
+  }
+
+  LOG('bodyValidator.addConnections():', 'pass validation');
+  return sanitize(body);
+}
+
+function isName(name) {
+  return validator.matches(name, /^[a-z0-9\s\_\-]+$/i);
+}
+
 function parseBody(body) {
   if (!body || typeof body === 'undefined' || typeof body === 'null')
     return null;
@@ -70,6 +94,7 @@ function sanitize(obj) {
 }
 
 module.exports = {
+  addConnections,
   userSignup,
   sanitize,
   login

@@ -13,7 +13,7 @@ describe('handlers/userSignup', function() {
 
   describe('#handler()', function() {
     it('should call validation -> controller with event.body content', async function() {
-      let stub = sinon.stub(user, 'login').resolves('success');
+      let stub = sinon.stub(user, 'authenticate').resolves('success');
       let valStub = sinon.stub(validation, 'login').returns({
           email: 'test_email',
           password: 'test_password'
@@ -24,33 +24,33 @@ describe('handlers/userSignup', function() {
     });
 
     it('should return status 200 and session token, if validation and controller succeeds', async function() {
-      sinon.stub(user, 'login').resolves('success');
+      sinon.stub(user, 'authenticate').resolves('success');
       sinon.stub(validation, 'login').returns({
         email: 'test_email',
         password: 'test_password'
       });
       let res = await handler({ body: {} });
       assert.equal(res.statusCode, 200);
-      assert.deepEqual(JSON.parse(res.body), { token: 'token' });
+      assert.deepEqual(JSON.parse(res.body), { user: 'success' });
     });
 
     it('should return status 500 and internal server error if controller fails', async function() {
-      sinon.stub(user, 'login').rejects();
+      sinon.stub(user, 'authenticate').rejects();
       sinon.stub(validation, 'login').returns({
         email: 'test_email',
         password: 'test_password'
       });
       let res = await handler({ body: {} });
       assert.equal(res.statusCode, 500);
-      assert.equal(res.message, 'internal_server_error');
+      assert.equal(JSON.parse(res.body).message, 'internal_server_error');
     });
 
     it('should return status 400 and error message if validation fails', async function() {
-      sinon.stub(user, 'login').resolves();
+      sinon.stub(user, 'authenticate').resolves();
       sinon.stub(validation, 'login').throws(ValidationError('test error'))
       let res = await handler({ body: {} });
       assert.equal(res.statusCode, 400);
-      assert.equal(res.message, 'test error');
+      assert.equal(JSON.parse(res.body).message, 'test error');
     });
   });
 });

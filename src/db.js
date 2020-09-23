@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const { LOG } = require('./utils/log');
 
 class Database {
   constructor() {
@@ -24,6 +25,8 @@ class Database {
   }
 
   async query(...args) {
+    LOG('Database.query(', args, ')');
+
     return new Promise((resolve, reject) => {
       this.db.query(...args, (err, res, fields) => {
         if (err)
@@ -41,6 +44,10 @@ class Database {
 
   isDupEmailError(err) {
     return err && err.message && err.message.includes('ER_DUP_ENTRY') && err.message.includes('email');
+  }
+
+  isDupUsernameError(err) {
+    return err && err.message && err.message.includes('ER_DUP_ENTRY') && err.message.includes('username');
   }
 }
 

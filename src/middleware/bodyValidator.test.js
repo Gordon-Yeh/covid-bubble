@@ -10,7 +10,8 @@ describe('util/validator', function() {
         email: 'not a real email',
         firstName: 'John',
         lastName: 'Smith',
-        password: '123123123'
+        password: '123123123',
+        username: 'johnsmith1'
       };
       try {
         validation.userSignup(JSON.stringify(test));
@@ -48,7 +49,8 @@ describe('util/validator', function() {
         email: 'not a real email',
         firstName: 'John',
         lastName: 'Smith',
-        password: '123123123'
+        password: '123123123',
+        username: 'johnsmith1'
       };
       try {
         validation.userSignup(test);
@@ -63,7 +65,7 @@ describe('util/validator', function() {
         validation.userSignup({});
       } catch (e) {
         assert.equal(e.name, 'validation', e.stack);
-        assert.deepEqual(JSON.parse(e.message), ['invalid_email', 'invalid_firstname', 'invalid_lastname', 'invalid_password']);
+        assert.deepEqual(JSON.parse(e.message), ['invalid_email', 'invalid_firstname', 'invalid_lastname', 'invalid_username', 'invalid_password']);
       }
     });
   });

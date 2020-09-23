@@ -4,7 +4,7 @@ const { handler } = require('./userSignup');
 const user = require('../controllers/user');
 const assert = require('assert');
 const validation = require('../middleware/bodyValidator');
-const { ValidationError } = require('../utils/error');
+const { ValidationError, DBError } = require('../utils/error');
 
 describe('handlers/userSignup', function() {
   afterEach(function() {
@@ -39,7 +39,7 @@ describe('handlers/userSignup', function() {
     });
 
     it('should return status 500 and internal server error if controller fails', async function() {
-      sinon.stub(user, 'createUser').rejects();
+      sinon.stub(user, 'createUser').rejects(DBError('internal_server_error'));
       sinon.stub(validation, 'userSignup').returns({
         email: 'test_email',
         password: 'test_password',
@@ -48,7 +48,7 @@ describe('handlers/userSignup', function() {
       });
       let res = await handler({ body: {} });
       assert.equal(res.statusCode, 500);
-      assert.equal(res.message, 'internal_server_error');
+      assert.equal(JSON.parse(res.body).message, 'internal_server_error');
     });
 
     it('should return status 400 and error message if validation fails', async function() {
@@ -56,7 +56,7 @@ describe('handlers/userSignup', function() {
       sinon.stub(validation, 'userSignup').throws(ValidationError('test error'))
       let res = await handler({ body: {} });
       assert.equal(res.statusCode, 400);
-      assert.equal(res.message, 'test error');
+      assert.equal(JSON.parse(res.body).message, 'test error');
     });
   });
 });

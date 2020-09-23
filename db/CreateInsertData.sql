@@ -1,21 +1,38 @@
 -- TABLES
-CREATE TABLE Users (
+CREATE TABLE IF NOT EXISTS Users (
   user_id VARCHAR(255) PRIMARY KEY,
   email VARCHAR(40) UNIQUE,
   first_name VARCHAR(20) NOT NULL,
   last_name VARCHAR(20) NOT NULL,
-  password VARCHAR(255) NOT NULL
+  password VARCHAR(255) NOT NULL,
+  username VARCHAR(255) NOT NULL UNIQUE
 );
 
-CREATE TABLE Nodes (
+CREATE TABLE IF NOT EXISTS Nodes (
   node_id VARCHAR(255) PRIMARY KEY,
   name VARCHAR(20),
   linked_user VARCHAR(255),
-  INDEX user_ind(linked_user),
-  FOREIGN KEY(linked_user) REFERENCES Users(user_id) ON DELETE CASCADE
+  FOREIGN KEY(linked_user) REFERENCES Users(user_id) ON DELETE CASCADE,
+  INDEX user_ind(linked_user)
 );
 
--- INSERT INTO Users (id,email,first_name,last_name,password) VALUES ("OWJZDUPHPCXPQWMNHVDO","feugiat@vel.com","Mohammad","Gilbert","QML35YGT9JR5IX"),("CBPAMXJIREDTHOJHCBKW","mollis.Phasellus.libero@vehicula.edu","Sharon","Crawford","RJL52MJI8AT1KO"),("LUXTKLUYFRDJYGGLVKOP","consectetuer.adipiscing@infaucibus.ca","Wing","Kent","VZX19VOS6JK3IJ"),("ZTEZZKHLEDMZMNCSFGZN","nulla@aarcu.co.uk","Vanna","Marsh","CGF07NWW6TC1DL"),("XAVPQCKAZPOUEXUOSVQR","luctus.ipsum@Nullamfeugiatplacerat.com","Amos","Bowman","YRS54NWA6OD7QY"),("VHOGYLUJPIFHPKYSIEZT","Nunc.lectus.pede@sodalespurusin.com","Alexa","Freeman","NAY29XCQ3JI8FM"),("GYCXEEMBVNUHOTWGOUVM","ullamcorper.Duis.cursus@adipiscing.co.uk","Quamar","Joyce","SIW92WLT4FV4IO"),("JIAHLXFNOQFLDITYMNWQ","malesuada.vel@tellusSuspendisse.edu","Lewis","Morrow","OQT97MEE0FT4ZB"),("GKBTPHOZCKLPGQLWJWDV","at.velit.Pellentesque@massa.edu","Deirdre","Gallegos","GMQ62NIH6ZP0EM"),("ASBPMZIUKPHAVUAKFACE","a.feugiat@facilisiSedneque.co.uk","Amena","Hunter","GLK10MDC8QG9UN");
+CREATE TABLE IF NOT EXISTS Connections (
+  connection_id VARCHAR(255) PRIMARY KEY,
+  user_a VARCHAR(255) NOT NULL,
+  user_b VARCHAR(255),
+  name VARCHAR(255),
+  FOREIGN KEY(user_a) REFERENCES Users(user_id) ON DELETE CASCADE,
+  FOREIGN KEY(user_b) REFERENCES Users(user_id) ON DELETE CASCADE,
+  INDEX user_a_ind(user_a),
+  INDEX user_b_ind(user_b)
+);
+
+INSERT INTO Users (user_id, email, first_name, last_name, password, username) VALUES
+    ('f599906e-bb86-47bd-99be-4f6436eaec41', 'joe@gmail.com', 'Joe', 'Smith', '123123123', 'joe_smith'),
+    ('afe4a1ee-b802-43c6-b489-4c63d03f632f', 'john@gmail.com', 'John', 'Doe', '123123123', 'john_doe'),
+    ('7eb22b80-3f16-4317-b374-f957394345c8', 'bill@gmail.com', 'Bill', 'Nye', '123123123', 'bill_nye');
+
+-- INSERT INTO Nodes (node_id, name, linked_user) VALUES ('node_id_1', 'node_1', NULL),('node_id_1', 'node_1', 'hhi');
 -- INSERT INTO Users (id,email,first_name,last_name,password) VALUES ("NFUJDKGHBDBGZKQICXDB","non.arcu.Vivamus@ut.ca","Lev","Melendez","ICC91NIA7FD6ZK"),("HXULQMEYGSPCWAKBNDUG","sed@facilisis.net","Nayda","Carver","ZRZ81MIK8PA6TG"),("CGQBNXJBCHMSBVJVYJKG","Suspendisse@tortorNunccommodo.com","Hadassah","Wolfe","XBG61APN9GH7AF"),("HVHPCFDXWJLRXCXOZDPI","dolor@aliquet.com","Ishmael","Travis","SFY82VZH5GI9CP"),("AXXXJMFJUNYWGRVOXBGY","nulla.ante.iaculis@Integerinmagna.co.uk","Gregory","Dotson","JNE76WXF3QW4EA"),("HZAIZFIZBBVBPLNEHLUF","eu.odio.tristique@nuncullamcorpereu.co.uk","Jennifer","Lloyd","INZ67BFD8LY4QE"),("NQIJYLJUYRVJGPXJFMWX","interdum.libero.dui@luctusipsum.edu","Odysseus","Lang","TIM43CEO6SY3RI"),("EVQXDMBROVUNAIEWVCXC","at@Nullafacilisi.ca","Drew","Mcconnell","CDP44ZXL4YN8PN"),("ZPJDTIOISADTJZUKXKKD","rhoncus@cursus.net","Fletcher","Mendez","ZMK99YHF4WP8SI"),("OBPFBLDGMLEGWWDTXVTQ","tellus@rutrum.org","Moses","Erickson","LPW89ZVJ1GR0AP");
 -- INSERT INTO Users (id,email,first_name,last_name,password) VALUES ("WGTXGTYKFHJGGNZNWIKA","Phasellus.dapibus.quam@velit.ca","Chava","Mullen","DMW99IBL8HY3DP"),("XRWWOIJSCSEWDXUHOWBN","dictum.placerat.augue@euodiotristique.ca","Fitzgerald","Santiago","XSW26AHA0KS5RE"),("ODEVEDUEAZRWBALWCMPO","ornare.Fusce.mollis@mi.co.uk","Thane","Buck","YAO72VAZ4TS1ND"),("PPGTCNULQLIUJAKUZVDV","at@per.org","Raja","Pickett","EYB72ASO0EM3KO"),("RVDEXKLJLUPBDCQFWPMH","Aliquam@diamloremauctor.com","Chadwick","Haney","OIK39XTB4VX5TS"),("LAVLJJAUEANNQIQGWLAT","elit.dictum@tellussemmollis.com","Whilemina","Harrison","YVR72UJA6YB4VF"),("JIKVVJOWFZUMBHVYPMGH","dui.Cras.pellentesque@milacinia.com","Cara","Rasmussen","DNX86ISX2TB8FE"),("VJOOGVFYHNYJPWBNSEOR","ligula.Aliquam@imperdiet.co.uk","Alexis","Horn","MCF31HLH8ZN1QM"),("PJEGACCXKECAZIECFJXI","tellus.lorem.eu@dictum.com","Chaney","Potts","IMK43AOY3RW3RB"),("LSANEQATSKUKGFWETITO","non.enim.Mauris@veliteu.edu","Larissa","Underwood","YAK76MSO2FN2MI");
 -- INSERT INTO Users (id,email,first_name,last_name,password) VALUES ("TNXHDLEVDUZPCKKQULFG","ac@orci.edu","Venus","Cooper","XOQ42DYQ9LE6OL"),("LVFTBIONXUXKTWJMYLUJ","libero.Donec.consectetuer@eu.com","Carissa","Burnett","KIW56JKG9DV4AY"),("BTBTOXMUYOPWWMZJDAYA","Ut.nec.urna@Aliquamadipiscinglobortis.edu","Oliver","Forbes","SNR21NEU7XO5UW"),("FYPZOURUQILYXFHWBZBY","amet.luctus.vulputate@dolorQuisque.org","Gemma","Hampton","LNQ34PLS9IT7ZK"),("RFIVMXHCJNNFOWUJDIMG","semper@justoeuarcu.ca","Lois","Gentry","JEJ72JXJ5GP9UM"),("OJIJFBCPQBKQLNTZWRVW","commodo.hendrerit.Donec@necmollis.com","Rama","Fitzpatrick","YMB92ELW8RT7JK"),("GCDZFEKSLVKNVMTROZCV","nunc.risus@Crassed.co.uk","Wang","Ellis","SJY46EBO1WE2TA"),("ANYFPYXOETVJUOYVWOAM","Suspendisse@tristiqueac.com","Dorian","York","GJW97ZVY8UP0BI"),("QNZCUWXLGHQEYOTDVXBX","a.neque@utodiovel.edu","Ezekiel","Morin","RZW62QDG5WK7DB"),("CUYHYLMGOQRKPJSZTQLR","sapien.Nunc.pulvinar@scelerisque.ca","Xanthus","Hammond","XMI09QFG9YC6HB");
