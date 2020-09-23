@@ -113,7 +113,21 @@ describe('controllers/node', function() {
       assert.deepEqual(result, [
         { connectionId: 'id_0', name: 'connection_1', linkedUsername: 'user_1' },
         { connectionId: 'id_1', name: 'connection_2', linkedUsername: null }
-      ])
+      ]);
     });
   }); // #addConnections()
+
+  describe('#getConnections()', function() {
+    it('should call db.query with the correct arguments', async function() {
+      let userId = 'main_user';
+      let dbQueryStub = sinon.stub(Database.prototype, 'query');
+      dbQueryStub.resolves('success');
+      let result = await controller.getConnections('main_user');
+      sinon.assert.calledWith(dbQueryStub,
+        'SELECT c.connection_id, c.name, u.username FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id) UNION SELECT c.connection_id, c.name, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;',
+        [ userId, userId, userId ]
+      );
+      assert.equal(result, 'success');
+    });
+  }); // #getConnections()
 });

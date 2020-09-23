@@ -33,6 +33,19 @@ async function addConnections(userId, connections) {
   }
 }
 
+async function getConnections(userId) {
+  LOG('nodes.getConnections():', `users=${userId}`);
+  let sql = 'SELECT c.connection_id, c.name, u.username FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id)'
+            + ' UNION ' + 'SELECT c.connection_id, c.name, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;';
+  try {
+    let res = await db.query(sql, [userId, userId, userId]);
+    return res;
+  } catch (e) {
+    throw DBError('database_error');
+  }
+}
+
 module.exports = {
-  addConnections,
+  getConnections,
+  addConnections
 }
