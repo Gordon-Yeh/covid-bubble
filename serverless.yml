@@ -31,6 +31,8 @@ provider:
     DB_USER: ${file(./config.yml):${self:provider.stage}.dbUser}
     DB_PWD: ${file(./config.yml):${self:provider.stage}.dbPwd}
     DB_NAME: ${file(./config.yml):${self:provider.stage}.dbName}
+    SESSION_KEY: ${file(./config.yml):${self:provider.stage}.sessionKey}
+    SESSION_EXPIRY: ${file(./config.yml):${self:provider.stage}.sessionExpiry}
   role: ${file(./config.yml):${self:provider.stage}.role}
   vpc: # Optional VPC. But if you use VPC then both subproperties (securityGroupIds and subnetIds) are required
     securityGroupIds: ${file(./config.yml):${self:provider.stage}.securityGroupIds}

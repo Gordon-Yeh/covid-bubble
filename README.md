@@ -22,7 +22,6 @@ Used register a user onto the service.
 ```
 {
   "token": ""
-  "connections": ""
 }
 ```
 ### Error Response
@@ -53,7 +52,8 @@ Used to acquire a session token with email and password credentials.
 **Body**
 ```
 {
-  "token": ""
+  "token": "",
+  "user": "",
   "connections": ""
 }
 ```

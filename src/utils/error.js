@@ -9,7 +9,11 @@ function AuthError(message) {
 }
 
 function DBError(message) {
-  return CustomError('database', message)
+  return CustomError('database', message);
+}
+
+function InternalError(message) {
+  return CustomError('internal', message);
 }
 
 function CustomError(name, message) {
@@ -22,5 +26,6 @@ module.exports = {
   ValidationError,
   CustomError,
   AuthError,
+  InternalError,
   DBError
 }
