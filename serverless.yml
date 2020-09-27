@@ -83,28 +83,28 @@ functions:
     handler: src/handlers/userSignup.handler
     events:
       - http:
-          path: user/signup
+          path: /user/signup
           method: post
 
   login:
     handler: src/handlers/login.handler
     events:
       - http:
-          path: user/login
+          path: /user/login
           method: post
 
   addConnection:
     handler: src/handlers/addConnection.handler
     events:
       - http:
-          path: /connection/add/{userId}
+          path: /user/connections
           method: post
   
   getConnections:
     handler: src/handlers/getConnections.handler
     events:
       - http:
-          path: /connection/get/{userId}
+          path: /user/connections
           method: get
 
 #    The following are a few example events you can configure

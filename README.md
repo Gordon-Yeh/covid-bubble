@@ -78,7 +78,7 @@ Used to acquire a session token with email and password credentials.
 ## Add Connections
 Add first degree connections to user's network.  
 
-**URL** : `/connection/add`  
+**URL** : `/user/connections`  
 **Method** : `POST`  
 **Auth required** : YES  
 **Request Body**
@@ -132,7 +132,7 @@ Add first degree connections to user's network.
 ## Get Connections
 Get the user's entire network.  
 
-**URL** : `/connection/get`  
+**URL** : `/user/connections`  
 **Method** : `GET`  
 **Auth required** : YES  
 ### Success Response
