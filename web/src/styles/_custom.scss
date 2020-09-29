@@ -1,0 +1,23 @@
+@import "./colors";
+@import "./bootstrap";
+@import "./fonts/fonts";
+
+.text-primary {
+  color: $primary;
+}
+
+.text-secondary {
+  color: $secondary;
+}
+
+.text-dark {
+  color: $dark;
+}
+
+.text-warning {
+  color: $warning;
+}
+
+.text-danger {
+  color: $danger;
+}

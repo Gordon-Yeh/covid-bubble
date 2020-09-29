@@ -1,7 +1,7 @@
 import React from 'react';
 import NetworkGraph from './components/NetworkGraph';
 import DialogBox from './containers/DialogBox';
-import { LandingDialog, SignupDialog, AddNodeDialog } from './components/Dialogs';
+import { LandingDialog, SignupDialog, AddNodeDialog, DashboardDialog } from './components/Dialogs';
 import './App.scss';
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
   return (
     <div className="App">
       <DialogBox>
-        <AddNodeDialog/>
+        <DashboardDialog/>
       </DialogBox>
       <NetworkGraph 
         height={window.outerHeight + 1000}
