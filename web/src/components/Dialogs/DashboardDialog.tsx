@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function DashboardDialog({
-  bubbleSize, onAddConnection
+  bubbleSize, onAddNode
 }) {
   return (
     <div className="text-left h5">
@@ -16,10 +16,10 @@ export default function DashboardDialog({
         <button
           type="button"
           className="btn btn-primary mr-3"
-          onClick={onAddConnection}
+          onClick={onAddNode}
         >
           Add more
-        </button>
+        </button>by construction in JavaScript it is not implemented as text but as binary. There is no reason to show the binary code that implements that function because it is not readable and it might not even be available
       </p>
     </div>
   )
@@ -27,5 +27,5 @@ export default function DashboardDialog({
 
 DashboardDialog.defaultProps = {
   bubbleSize: 1,
-  onAddConnection: () => {}
+  onAddNode: () => {}
 };

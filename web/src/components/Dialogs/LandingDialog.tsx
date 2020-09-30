@@ -12,14 +12,14 @@ export default function LandingDialog({
       <p>
         <button
           type="button"
-          className="btn btn-primary custom-btn mr-3"
+          className="btn btn-primary mr-3"
           onClick={onLogin}
         >
           Login
         </button>
         <button
           type="button"
-          className="btn btn-warning custom-btn"
+          className="btn btn-warning text-white"
           onClick={onSignup}
         >
             Signup

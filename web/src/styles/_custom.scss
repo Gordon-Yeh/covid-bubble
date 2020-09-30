@@ -2,6 +2,14 @@
 @import "./bootstrap";
 @import "./fonts/fonts";
 
+.text-black {
+  color: black;
+}
+
+.text-white {
+  color: white;
+}
+
 .text-primary {
   color: $primary;
 }
@@ -20,4 +28,9 @@
 
 .text-danger {
   color: $danger;
+}
+
+.btn {
+  padding-left: 20px;
+  padding-right: 20px;
 }

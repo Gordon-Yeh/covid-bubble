@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import './SignupDialog.scss';
 
 export default function SignupDialog({
-  onSubmit
+  onSubmit, onBack
 }) {
   const [firstName, setFirstName] = useField('');
   const [lastName, setLastName] = useField('');
@@ -10,6 +9,8 @@ export default function SignupDialog({
   const [username, setUsername] = useField('');
   const [password, setPassword] = useField('');
   const [showPassword, setShowPassword] = useState(false);
+
+console.log('new state!', firstName, lastName, email, username, password, showPassword);
 
   function handleSubmit() {
     onSubmit({
@@ -26,20 +27,38 @@ export default function SignupDialog({
       {/* first name field */}
       <div className="row g-3 align-items-center mb-3">
         <div className="col-3">
-          <label className="col-form-label">First Name</label>
+          <label htmlFor="firstname" className="col-form-label">
+            First Name
+          </label>
         </div>
         <div className="col-7">
-          <input type="text" className="form-control" value={firstName} onChange={setFirstName}/>
+          <input
+            id="firstname"
+            type="text"
+            className="form-control"
+            value={firstName}
+            onChange={setFirstName}
+            required
+          />
         </div>
       </div>
 
       {/* last name field */}
       <div className="row g-3 align-items-center mb-3">
         <div className="col-3">
-          <label className="col-form-label">Last Name<span className="red">*</span></label>
+          <label htmlFor="lastname" className="col-form-label">
+            Last Name<span className="red">*</span>
+          </label>
         </div>
         <div className="col-7">
-          <input type="text" className="form-control" value={lastName} onChange={setLastName}/>
+          <input
+            id="lastname"
+            type="text"
+            className="form-control"
+            value={lastName}
+            onChange={setLastName}
+            required
+          />
         </div>
       </div>
 
@@ -47,30 +66,57 @@ export default function SignupDialog({
       {/* email field */}
       <div className="row g-3 align-items-center mb-3">
         <div className="col-3">
-          <label className="col-form-label">Email</label>
+          <label htmlFor="email" className="col-form-label">
+            Email
+          </label>
         </div>
         <div className="col-7">
-          <input type="email" className="form-control" value={email} onChange={setEmail}/>
+          <input 
+            id="emai"
+            type="email" 
+            className="form-control" 
+            value={email} 
+            onChange={setEmail}
+            required
+          />
         </div>
       </div>
 
       {/* username field */}
         <div className="row g-3 align-items-center mb-3">
         <div className="col-3">
-          <label className="col-form-label">Username</label>
+          <label htmlFor="username" className="col-form-label">
+            Username
+          </label>
         </div>
         <div className="col-7">
-          <input type="text" className="form-control" value={username} onChange={setUsername}/>
+          <input 
+            id="username"
+            type="text" 
+            className="form-control" 
+            value={username} 
+            onChange={setUsername}
+            required
+          />
         </div>
       </div>
 
       {/* password field */}
       <div className="row g-3 align-items-center mb-3">
         <div className="col-3">
-          <label className="col-form-label">Password</label>
+          <label htmlFor="password" className="col-form-label">
+            Password
+          </label>
         </div>
         <div className="col-7">
-          <input type={showPassword ? 'text' : 'password'} className="form-control" value={password} onChange={setPassword}/>
+          <input 
+            id="password"
+            type={showPassword ? 'text' : 'password'} 
+            className="form-control" 
+            value={password} 
+            onChange={setPassword}
+            required
+          />
         </div>
         <div className="col-2">
           <span onClick={handleToggleShowPassword}>Show</span>
@@ -82,7 +128,10 @@ export default function SignupDialog({
 
       <div className="row g-3 justify-content-end mb-3 mr-2">
         <div className="col-auto">
-          <button type="button" className="btn btn-warning btn-signup" onClick={handleSubmit}>
+          <button type="button" className="btn btn-light mr-3" onClick={onBack}>
+            Back
+          </button>
+          <button type="submit" className="btn btn-warning" onSubmit={handleSubmit}>
             Signup
           </button>
         </div>
@@ -101,4 +150,5 @@ function useField(initial) {
 
 SignupDialog.defaultProps = {
   onSubmit: _ => { console.log(_) },
+  onBack: _ => { console.log(_) },
 };

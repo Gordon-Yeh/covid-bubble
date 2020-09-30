@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
-export default function AddNodeDialog() {
+export default function AddNodeDialog({
+  onSubmit
+}) {
   const [name, setName] = useState('');
   const [knowUsername, setKnowUsername] = useState(true);
   const [username, setUsername] = useState('');
@@ -80,7 +82,7 @@ export default function AddNodeDialog() {
 
         <div className="row g-3 justify-content-end mt-3 mb-3 mr-2">
           <div className="col-auto">
-            <button type="button" className="btn btn-primary btn-signup">
+            <button type="button" onSubmit={onSubmit} className="btn btn-primary btn-signup">
               Add
             </button>
           </div>
@@ -89,3 +91,7 @@ export default function AddNodeDialog() {
     </div>
   );
 }
+
+AddNodeDialog.defaultProps = {
+  onSubmit: () => {}
+};
