@@ -10,7 +10,7 @@ async function handler(event) {
   LOG('event body', event.body);
 
   try {
-    let payload = session.verify(event);
+    let payload = await session.verify(event);
     let body = validation.addConnections(event.body);
     let result = await controller.addConnections(payload.userId, body.connections);
     return new response.Success({ connections: result });

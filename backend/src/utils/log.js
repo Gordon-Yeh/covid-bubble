@@ -1,7 +1,7 @@
 'use strict';
 
 function LOG(...args) {
-  if (process.env.STAGE === 'dev' || process.env.STAGE === 'local')
+  if (process.env.STAGE === 'development')
     console.log(`[${(new Date()).toISOString()}]`, ...args);
 }
 

@@ -2,19 +2,16 @@
 
 const jwt = require('jsonwebtoken');
 const { AuthError, InternalError } = require('../utils/error');
+const _cookie = require('../utils/cookies');
 
 async function verify(event) {
-  if (!event.headers['authorization']) {
+  // expecting format 
+  // header.cookie: "session:${jwt};"
+  let cookies = _cookie.parse(event.headers.Cookie);
+  if (!cookies['cobu_sessionToken']) {
     throw AuthError('invalid_session');
   }
-  // expecting format 
-  // body {
-  //   authorization: "Bearer [token]"
-  // }
-  let headerAuthParts = event.headers['authorization'].split(' ');
-  if (headerAuthParts.length < 2)
-    throw AuthError('invalid_session');;
-  let token = headerAuthParts[1];
+  let token = cookies['cobu_sessionToken'];
   return new Promise((resolve, reject) => {
     jwt.verify(token, process.env.SESSION_KEY,
       (err, payload) => {

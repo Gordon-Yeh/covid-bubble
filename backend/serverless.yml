@@ -23,7 +23,7 @@ provider:
   name: aws
   region: us-west-2
   runtime: nodejs10.x
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage, 'development'}
   environment:
     STAGE: ${self:provider.stage}
     DB_PORT: ${file(./config.yml):${self:provider.stage}.dbPort}
@@ -37,10 +37,6 @@ provider:
   vpc: # Optional VPC. But if you use VPC then both subproperties (securityGroupIds and subnetIds) are required
     securityGroupIds: ${file(./config.yml):${self:provider.stage}.securityGroupIds}
     subnetIds: ${file(./config.yml):${self:provider.stage}.subnetIds}
-
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:

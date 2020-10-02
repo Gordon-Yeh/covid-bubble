@@ -52,7 +52,7 @@ async function getConnections(userId) {
           adjList[parent].push({
             name: con.name,
             username: con.username,
-            userId: con.user_id
+            id: con.user_id
           });
           visited.add(con.user_id);
           queue.push(con.user_id);
@@ -60,7 +60,7 @@ async function getConnections(userId) {
           adjList[parent].push({
             name: con.name,
             username: null,
-            userId: null
+            id: null
           });
         }
       });

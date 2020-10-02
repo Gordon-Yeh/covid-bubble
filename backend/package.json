@@ -15,7 +15,7 @@
     "sinon": "^9.0.3"
   },
   "scripts": {
-    "start": "sls offline --stage local",
+    "start": "sls offline --stage development --httpPort 8080 --httpsProtocol dev/",
     "test": "mocha src/**/*.test.js"
   },
   "author": "",

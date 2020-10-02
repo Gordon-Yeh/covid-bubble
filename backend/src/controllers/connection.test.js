@@ -177,15 +177,15 @@ describe('controllers/node', function() {
       );
       assert.deepEqual(result, {
         'main_user': [
-          { name: 'name_1', username: 'username_1', userId: 'userid_1' },
-          { name: 'name_2', username: 'username_2', userId: 'userid_2' },
-          { name: 'name_3', username: 'username_3', userId: 'userid_3' },
+          { name: 'name_1', username: 'username_1', id: 'userid_1' },
+          { name: 'name_2', username: 'username_2', id: 'userid_2' },
+          { name: 'name_3', username: 'username_3', id: 'userid_3' },
         ],
         'userid_1': [],
         'userid_2': [],
-        'userid_3': [ { name: 'name_4', username: 'username_4', userId: 'userid_4' } ],
-        'userid_4': [ { name: 'name_5', username: 'username_5', userId: 'userid_5' } ],
-        'userid_5': [ { name: 'unlined_con_1', username: null, userId: null } ]
+        'userid_3': [ { name: 'name_4', username: 'username_4', id: 'userid_4' } ],
+        'userid_4': [ { name: 'name_5', username: 'username_5', id: 'userid_5' } ],
+        'userid_5': [ { name: 'unlined_con_1', username: null, id: null } ]
       });
     });
   }); // #getConnections()
