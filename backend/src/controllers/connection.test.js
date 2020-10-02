@@ -110,7 +110,7 @@ describe('controllers/node', function() {
       idStub.onCall(0).returns('id_0');
       idStub.onCall(1).returns('id_1');
       let result = await controller.addConnections('main_user', connections);
-      assert.deepEqual(result, [
+      assert.deepStrictEqual(result, [
         { connectionId: 'id_0', name: 'connection_1', linkedUsername: 'user_1' },
         { connectionId: 'id_1', name: 'connection_2', linkedUsername: null }
       ]);
@@ -150,7 +150,7 @@ describe('controllers/node', function() {
       ]);
       dbQueryStub.onCall(5).resolves([ { name: 'unlined_con_1' } ]);
       let result = await controller.getConnections('main_user');
-      assert.equal(dbQueryStub.callCount, 6);
+      assert.deepStrictEqual(dbQueryStub.callCount, 6);
       sinon.assert.calledWith(dbQueryStub,
         'SELECT c.connection_id, c.name, u.username, u.user_id FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id) UNION SELECT c.connection_id, c.name, NULL, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;',
         [ userId, userId, userId ]
@@ -175,17 +175,17 @@ describe('controllers/node', function() {
         'SELECT c.connection_id, c.name, u.username, u.user_id FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id) UNION SELECT c.connection_id, c.name, NULL, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;',
         [ 'userid_5', 'userid_5', 'userid_5' ]
       );
-      assert.deepEqual(result, {
-        'main_user': [
-          { name: 'name_1', username: 'username_1', id: 'userid_1' },
-          { name: 'name_2', username: 'username_2', id: 'userid_2' },
-          { name: 'name_3', username: 'username_3', id: 'userid_3' },
+      assert.deepStrictEqual(result, {
+        '0': [
+          { name: 'name_1', username: 'username_1', id: '1' },
+          { name: 'name_2', username: 'username_2', id: '2' },
+          { name: 'name_3', username: 'username_3', id: '3' },
         ],
-        'userid_1': [],
-        'userid_2': [],
-        'userid_3': [ { name: 'name_4', username: 'username_4', id: 'userid_4' } ],
-        'userid_4': [ { name: 'name_5', username: 'username_5', id: 'userid_5' } ],
-        'userid_5': [ { name: 'unlined_con_1', username: null, id: null } ]
+        '1': [],
+        '2': [],
+        '3': [ { name: 'name_4', username: 'username_4', id: '4' } ],
+        '4': [ { name: 'name_5', username: 'username_5', id: '5' } ],
+        '5': [ { name: 'unlined_con_1', id: '6' } ]
       });
     });
   }); // #getConnections()

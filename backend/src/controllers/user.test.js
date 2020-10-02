@@ -18,11 +18,11 @@ describe('controllers/user', function() {
       sinon.stub(id, 'genUserId').returns('test_user_id');
       let result = await userController.createUser('test_email', 'test_password', 'test_first_name', 'test_last_name', 'test_username');
       assert(dbQueryStub.calledOnce);
-      assert.deepEqual(result, {
+      assert.deepStrictEqual(result, {
         email: 'test_email',
         firstName: 'test_first_name',
         lastName: 'test_last_name',
-        userId: 'test_user_id',
+        id: 'test_user_id',
         username: 'test_username'
       });
     });

@@ -33,34 +33,36 @@ async function addConnections(userId, connections) {
   }
 }
 
-async function getConnections(userId) {
-  LOG('nodes.getConnections():', `users=${userId}`);
+async function getConnections(rootUserId) {
+  LOG('nodes.getConnections():', `users=${rootUserId}`);
   let sql = 'SELECT c.connection_id, c.name, u.username, u.user_id FROM Users u, Connections c WHERE (c.user_a = ? AND c.user_b = u.user_id) OR (c.user_b = ? AND c.user_a = u.user_id)'
             + ' UNION ' + 'SELECT c.connection_id, c.name, NULL, NULL FROM Connections c WHERE c.user_a = ? AND c.user_b is NULL;';
   let adjList = {};
-  let queue = [ userId ];
   let visited = new Set();
+  let queue = [ [ rootUserId, 0 ] ];
+  let idCounter = 1;
 
   try {
-    visited.add(userId);
+    visited.add(rootUserId);
     while (queue.length > 0) {
-      let parent = queue.shift();
-      let res = await db.query(sql, [parent, parent, parent]);
-      adjList[parent] = [];
-      res.forEach(con => {
-        if (con.user_id != null && !visited.has(con.user_id)) {
-          adjList[parent].push({
-            name: con.name,
-            username: con.username,
-            id: con.user_id
+      let [ userId, listId ] = queue.shift();
+      let res = await db.query(sql, [userId, userId, userId]);
+      adjList[listId] = [];
+      res.forEach(c => {
+        if (c.user_id != null && !visited.has(c.user_id)) {
+          const cListId = (idCounter++).toString();
+          adjList[listId].push({
+            name: c.name,
+            username: c.username,
+            id: cListId
           });
-          visited.add(con.user_id);
-          queue.push(con.user_id);
-        } else if (con.user_id == null) {
-          adjList[parent].push({
-            name: con.name,
-            username: null,
-            id: null
+          visited.add(c.user_id);
+          queue.push([ c.user_id, cListId ]);
+        } else if (c.user_id == null) {
+          const cListId = (idCounter++).toString();
+          adjList[listId].push({
+            name: c.name,
+            id: cListId
           });
         }
       });
@@ -68,6 +70,7 @@ async function getConnections(userId) {
     return adjList;
   } catch (e) {
     LOG(e);
+    console.log(e);
     throw DBError('database_error');
   }
 }
