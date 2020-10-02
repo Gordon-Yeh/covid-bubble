@@ -7,11 +7,9 @@ export default function SignupDialog({
   const [password, setPassword] = useField('');
   const [showPassword, setShowPassword] = useState(false);
 
-
-  function handleSubmit() {
-    onSubmit({
-      email, password
-    });
+  function handleSubmit(e) {
+    e.preventDefault();
+    onSubmit(email, password);
   }
 
   function handleToggleShowPassword() {
@@ -19,7 +17,7 @@ export default function SignupDialog({
   }
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       {/* email field */}
       <div className="row g-3 align-items-center mb-3">
         <div className="col-3">
@@ -68,7 +66,7 @@ export default function SignupDialog({
           </button>
         </div>
         <div className="col-auto">
-          <button type="submit" className="btn btn-primary" onSubmit={handleSubmit}>
+          <button type="submit" className="btn btn-primary">
             Login
           </button>
         </div>
@@ -87,5 +85,6 @@ function useField(initial) {
 
 SignupDialog.defaultProps = {
   onSubmit: _ => console.log(_),
-  onBack: _ => console.log(_)
+  onBack: _ => console.log(_),
+  errors: []
 };

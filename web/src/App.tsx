@@ -3,21 +3,26 @@ import NetworkGraph from './components/NetworkGraph';
 import DialogBox from './containers/DialogBox';
 import './App.scss';
 
+
 function App() {
-  const [ network, setNetwork ] = useState(getNetwork());
+  const [ network, setNetwork ] = useState({});
   const [ selectedNode, setSelectedNode ] = useState(null);
+  const [ user, setUser ] = useState({});
 
   return (
     <div className="App">
       <DialogBox
         selectedNode={selectedNode}
         bubbleSize={Object.keys(network).length}
+        setNetwork={setNetwork}
+        setUser={setUser}
       />
-      {/* <NetworkGraph 
-        height={window.outerHeight + 1000}
-        width={window.outerWidth + 1000}
-        graph={graph}>
-      </NetworkGraph> */}
+      <NetworkGraph 
+        height={window.outerHeight}
+        width={window.outerWidth}
+        root={user.userId}
+        network={network}>
+      </NetworkGraph>
     </div>
   );
 }

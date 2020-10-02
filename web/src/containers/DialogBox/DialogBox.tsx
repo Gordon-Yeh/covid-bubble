@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import './DialogBox.scss';
 import { LoginDialog, LandingDialog, SignupDialog, AddNodeDialog, DashboardDialog } from 'components/Dialogs';
+import * as userAPI from 'api/user';
 
 enum Dialog { Login, Landing, Signup, AddNode, Dashboard };
 
 export default function DialogBox({
-  selectedNode, bubbleSize
+  selectedNode, bubbleSize, setNetwork, setUser
 }) {
   const [ dialog, setDialog ] = useState(Dialog.Landing);
 
@@ -16,6 +17,26 @@ export default function DialogBox({
     // await for respond
     // success: store token, redirect to dashboard
     // failure: show error message
+  }
+
+  async function handleLogin(email, password) {
+    console.log('handleLogin');
+    // validate
+    // submit with network request
+    // await for respond
+    // success:
+    //    - store token
+    //    - populate network graph
+    // failure: show error message
+    try {
+      let data = await userAPI.login(email, password);
+      console.log(data);
+      setNetwork(data.connections);
+      setUser(data.user);
+      setDialog(Dialog.Dashboard);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function handleAddNode(node) {
@@ -38,7 +59,7 @@ export default function DialogBox({
     case Dialog.Login:
       DialogToRender =
         <LoginDialog
-          onSubmit={handleSignup}
+          onSubmit={handleLogin}
           onBack={() => setDialog(Dialog.Landing)}
         />;
       break;
@@ -80,5 +101,7 @@ export default function DialogBox({
 
 DialogBox.defaultProps = {
   selectedNode: null,
-  bubbleSize: 1
-}
+  bubbleSize: 1,
+  setNetwork: _ => {},
+  setUser: () => {}
+};

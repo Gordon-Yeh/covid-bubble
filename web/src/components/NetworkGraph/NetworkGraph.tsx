@@ -2,10 +2,24 @@ import React, { useState } from 'react';
 import GraphNode from './GraphNode';
 import './NetworkGraph.scss';
 
+interface Link {
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+  source: string;
+  target: string;
+}
+
+interface Node {
+  id: string;
+  x: number;
+  y: number;
+  data: object;
+}
+
 export default function NetworkGraph(props) {
-  const data = getInitalPlacements(props.graph, props.root, props.width, props.height)
-  const [ links, setLinks ] = useState(data.links);
-  const [ nodes, setNodes ] = useState(data.nodes);
+  const [ nodes, links ] = getInitalPlacements(props.network, props.root, props.width, props.height)
   const [ selectedNode, setSelectedNode ] = useState(null);
 
   return (
@@ -35,13 +49,13 @@ export default function NetworkGraph(props) {
   );
 }
 
-function getInitalPlacements(graph, root, width, height) {
+function getInitalPlacements(graph, root, width, height) : [ Node[], Link[] ]{
   let center = [width/2, height/2],
       vert:string[] = Object.keys(graph);
   root = root ? root : vert[Math.floor(Math.random() * vert.length)];
   let queue:string[] = [root],
-      _nodes:Object[] = [],
-      _links:Object[] = [],
+      _nodes:Node[] = [],
+      _links:Link[] = [],
       lvl = 1,
       cirRadius = 100,
       visited = {
@@ -69,17 +83,19 @@ function getInitalPlacements(graph, root, width, height) {
           console.log(`position (${x}, ${y})`);
 
           childN = {
-            id: child, x, y,
+            id: child.id, x, y, data: {
+              ...child
+            }
           };
           _nodes.push(childN);
-          queue.push(child);
-          visited[child] = childN;
+          queue.push(child.id);
+          visited[child.id] = childN;
         } else {
           console.log('already visited');
-          childN = visited[child];
+          childN = visited[child.id];
         }
         _links.push({
-          source: parent, target: child,
+          source: parent, target: child.id,
           x1: parentN.x, y1: parentN.y,
           x2: childN.x, y2: childN.y
         });
@@ -88,10 +104,7 @@ function getInitalPlacements(graph, root, width, height) {
     lvl++;
   }
 
-  return {
-    nodes: _nodes,
-    links: _links
-  }
+  return [ _nodes, _links ]
 }
 
 NetworkGraph.defaultProps = {
@@ -103,5 +116,5 @@ NetworkGraph.defaultProps = {
   nodeRad: 30,
   linkWidth: 2,
   root: null,
-  graph: {}
+  network: {}
 };
