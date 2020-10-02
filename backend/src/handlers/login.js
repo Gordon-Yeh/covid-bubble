@@ -1,5 +1,5 @@
 'use strict';
-const user = require('../controllers/user');
+const userController = require('../controllers/user');
 const conn = require('../controllers/connection');
 const response = require('../utils/response');
 const validation = require('../middleware/bodyValidator');
@@ -12,10 +12,10 @@ async function handler(event) {
 
   try {
     let body = validation.login(event.body);
-    let result = await user.authenticate(body.email, body.password);
-    let connections = await conn.getConnections(result.userId);
-    let sessionToken = await session.create({ userId: result.userId, username: result.username });
-    let res = new response.Success({ user: result, connections }, sessionToken);
+    let user = await userController.authenticate(body.email, body.password);
+    let connections = await conn.getConnections(user.id);
+    let sessionToken = await session.create({ userId: user.id, username: user.username });
+    let res = new response.Success({ user, bubble: connections }, sessionToken);
     LOG('login.handler', 'responding with', res);
     return res;
   } catch (e) {

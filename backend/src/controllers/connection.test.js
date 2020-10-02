@@ -176,7 +176,7 @@ describe('controllers/node', function() {
         [ 'userid_5', 'userid_5', 'userid_5' ]
       );
       assert.deepStrictEqual(result, {
-        '0': [
+        'main_user': [
           { name: 'name_1', username: 'username_1', id: '1' },
           { name: 'name_2', username: 'username_2', id: '2' },
           { name: 'name_3', username: 'username_3', id: '3' },

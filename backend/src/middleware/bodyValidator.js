@@ -54,8 +54,8 @@ function addConnections(body) {
     throw ValidationError('invalid_body');
   }
 
-  for (let i = 0; i < body.connections.length; i++) {
-    let c = body.connections[i];
+  for (let i = 0; i < body.length; i++) {
+    let c = body[i];
     // TODO: handle case where user is connecting to themselves
     LOG('bodyValidator.addConnections():', 'checking connection:', c);
     if (!c.name || !isName(c.name))

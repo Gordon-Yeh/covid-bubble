@@ -94,13 +94,11 @@ Add first degree connections to user's network.
 **Auth required** : YES  
 **Request Body**
 ```
-{
-  connections: [
-    { "name": "", linkedUsername: "" },
-    { "name": "", linkedUsername: "" },
-    ...
-  ]
-}
+[
+  { "name": "", linkedUsername: "" },
+  { "name": "", linkedUsername: "" },
+  ...
+]
 ```
 ### Success Response
 **Status** : `200`  

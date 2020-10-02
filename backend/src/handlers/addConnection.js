@@ -12,9 +12,13 @@ async function handler(event) {
   try {
     let payload = await session.verify(event);
     let body = validation.addConnections(event.body);
-    let result = await controller.addConnections(payload.userId, body.connections);
-    return new response.Success({ connections: result });
+    await controller.addConnections(payload.userId, body);
+    let connections = await controller.getConnections(payload.userId);
+    let res = new response.Success({ bubble: connections })
+    LOG('addConnection.handler:', 'respond with', res);
+    return res;
   } catch (e) {
+    LOG(e);
     return errorToResponse(e);
   }
 };
