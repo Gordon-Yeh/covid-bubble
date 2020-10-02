@@ -7,7 +7,7 @@ interface AddNodeResponse {
 export async function addNode(name:string, username:string) : Promise<AddNodeResponse> {
   let node = { name };
   if (username)
-    node['username'] = username;
+    node['linkedUsername'] = username;
 
   return fetch(`${API_ADDR}/user/connections`, {
       method: 'POST',

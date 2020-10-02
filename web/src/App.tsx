@@ -12,19 +12,23 @@ function App() {
 
 
   return (
-    <div className="App">
-      <DialogBox
-        selectedNode={selectedNode}
-        bubbleSize={Object.keys(bubble).length}
-        setBubble={setBubble}
-        setUser={setUser}
-      />
-      <NetworkGraph 
-        height={window.outerHeight}
-        width={window.outerWidth}
-        root={user}
-        network={bubble}>
-      </NetworkGraph>
+    <div className="app">
+      <div className="dialog-box">
+        <DialogBox
+          selectedNode={selectedNode}
+          bubbleSize={Object.keys(bubble).length}
+          setBubble={setBubble}
+          setUser={setUser}
+        />
+      </div>
+      <div className="bubble-graph">
+        <NetworkGraph 
+          height={window.outerHeight}
+          width={window.outerWidth}
+          root={user}
+          network={bubble}
+        />
+      </div>
     </div>
   );
 }

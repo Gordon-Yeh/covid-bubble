@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function GraphNode({
-  radius, active, x, y, onClick
+  radius, color, x, y, onClick
 }) {
 
   function handleMouseOver(e) {
@@ -20,17 +20,19 @@ export default function GraphNode({
       r={radius}
       cx={x}
       cy={y}
-      fill={active ? "red" : "black"}
+      fill={color}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
       onClick={onClick}
+      stroke="white"
+      strokeWidth="2"
     />
   )
 }
 
 GraphNode.defaultProps = {
   radius: 30,
-  active: false,
+  color: 'black',
   onClick: () => {},
   x: 0,
   y: 0

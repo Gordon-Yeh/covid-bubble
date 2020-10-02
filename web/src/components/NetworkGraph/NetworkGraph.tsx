@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import GraphNode from './GraphNode';
 import './NetworkGraph.scss';
+import colors from 'data/colors.json';
 
 interface Link {
   x1: number;
@@ -18,12 +19,32 @@ interface Node {
   data: object;
 }
 
-export default function NetworkGraph(props) {
-  const [ nodes, links ] = getInitalPlacements(props.network, props.root, props.width, props.height)
-  const [ selectedNode, setSelectedNode ] = useState(null);
+export default function NetworkGraph({
+  network, root, width, height, linkWidth, nodeRad
+}) {
+  const [ nodes, links ] = getInitalPlacements(network, root, width, height)
+  const [ selectedNodeId, setSelectedNodeId ] = useState(null);
+
+  function getNodeColor(node) : string {
+    switch(node.id) {
+      case root.id:
+        return colors.primary;
+      case selectedNodeId:
+        return colors.secondary;
+      default:
+        return colors.dark;
+    }
+  }
+
+  function getLinkColor(link) : string {
+    if (link.source === selectedNodeId || link.target === selectedNodeId)
+      return colors.secondary;
+    else
+      return colors.dark;
+  }
 
   return (
-    <svg width={props.width} height={props.height} overflow="auto">
+    <svg width={width} height={height} overflow="auto">
       {links.map((link, index) =>(
         <line
           x1={link.x1}
@@ -31,18 +52,18 @@ export default function NetworkGraph(props) {
           x2={link.x2}
           y2={link.y2}
           key={`line-${index}`}
-          strokeWidth={props.linkWidth}
-          stroke={link.source == selectedNode || link.target == selectedNode ? "red" : "black"}
+          strokeWidth={linkWidth}
+          stroke={getLinkColor(link)}
         />
       ))}
       {nodes.map((node, index) =>(
         <GraphNode
-          radius={props.nodeRad}
+          radius={nodeRad}
           x={node.x}
           y={node.y}
-          active={node.id === selectedNode}
+          color={getNodeColor(node)}
           key={index}
-          onClick={() => setSelectedNode(node.id)}
+          onClick={() => setSelectedNodeId(node.id)}
         />
       ))}
     </svg>

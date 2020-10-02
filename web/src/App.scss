@@ -1,0 +1,19 @@
+.app {
+  position: relative;
+}
+
+.dialog-box {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 50px 50px 0 0;
+  z-index: 1000;
+}
+
+.bubble-graph {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  overflow: scroll;
+}
