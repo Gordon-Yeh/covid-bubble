@@ -1,7 +1,7 @@
 'use strict';
 const controller = require('../controllers/connection');
 const session = require('../middleware/session');
-const response = require('../models/response');
+const response = require('../utils/response');
 const errorToResponse = require('../utils/errorToResponse');
 const { LOG } = require('../utils/log');
 

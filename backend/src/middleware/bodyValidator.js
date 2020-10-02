@@ -7,7 +7,7 @@ const { LOG } = require('../utils/log');
 function userSignup(body) {
   body = parseBody(body);
   if (!body) {
-    throw ValidationError(JSON.stringify(['invalid_body']));
+    throw ValidationError('invalid_body');
   }
 
   let errors = [];
@@ -24,7 +24,7 @@ function userSignup(body) {
 
   if (errors.length > 0) {
     LOG('bodyValidator.userSignup()', 'errors found:', errors);
-    throw ValidationError(JSON.stringify(errors));
+    throw ValidationError(errors.join('; '));
   }
   
   return sanitize(body);
@@ -33,7 +33,7 @@ function userSignup(body) {
 function login(body) {
   body = parseBody(body);
   if (!body) {
-    throw ValidationError(JSON.stringify(['invalid_body']));
+    throw ValidationError('invalid_body');
   }
 
   let errors = [];
@@ -43,7 +43,7 @@ function login(body) {
     errors.push('invalid_password');
 
   if (errors.length > 0)
-    throw ValidationError(JSON.stringify(errors));
+    throw ValidationError(errors.join('; '));
   
   return sanitize(body);
 }
@@ -51,7 +51,7 @@ function login(body) {
 function addConnections(body) {
   body = parseBody(body);
   if (!body) {
-    throw ValidationError(JSON.stringify(['invalid_body']));
+    throw ValidationError('invalid_body');
   }
 
   for (let i = 0; i < body.connections.length; i++) {
@@ -59,7 +59,7 @@ function addConnections(body) {
     // TODO: handle case where user is connecting to themselves
     LOG('bodyValidator.addConnections():', 'checking connection:', c);
     if (!c.name || !isName(c.name))
-      throw ValidationError(JSON.stringify(['invalid_connection_name']));
+      throw ValidationError('invalid_connection_name');
   }
 
   LOG('bodyValidator.addConnections():', 'pass validation');

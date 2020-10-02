@@ -15,11 +15,11 @@ describe('util/session', async function() {
         username: 'main_username'
       };
       let token = await session.create(payload);
-      let headers = { authorization: `Bearer ${token}` };
+      let headers = { Cookie: `cobu_sessionToken=${token};` };
       try {
         let results = await session.verify({ headers });
-        assert.equal(results.userId, 'main_userid');
-        assert.equal(results.username, 'main_username');
+        assert.strictEqual(results.userId, 'main_userid');
+        assert.strictEqual(results.username, 'main_username');
       } catch (e) {
         console.log(e);
         assert(false, 'verification of token failed');
@@ -35,13 +35,13 @@ describe('util/session', async function() {
         username: 'main_username'
       };
       let token = await session.create(payload);
-      let headers = { authorization: `Bearer ${token}` };
+      let headers = { Cookie: `cobu_sessionToken=${token};` };
       try {
         let results = await session.verify({ headers });
-        assert.equal(jwt.verify.firstCall.args[0], token);
-        assert.equal(jwt.verify.firstCall.args[1], 'test key');
-        assert.equal(results.userId, 'main_userid');
-        assert.equal(results.username, 'main_username');
+        assert.strictEqual(jwt.verify.firstCall.args[0], token);
+        assert.strictEqual(jwt.verify.firstCall.args[1], 'test key');
+        assert.strictEqual(results.userId, 'main_userid');
+        assert.strictEqual(results.username, 'main_username');
       } catch (e) {
         console.log(e);
         assert(false, 'verification of token failed');
@@ -77,11 +77,11 @@ describe('util/session', async function() {
         if (err)
           assert(false, 'jwt failed to verify');
         assert(jwt.sign.calledOnce);
-        assert.deepEqual(jwt.sign.firstCall.args[0], payload);
-        assert.equal(jwt.sign.firstCall.args[1], 'test key');
-        assert.deepEqual(jwt.sign.firstCall.args[2], { expiresIn: '2h' });
-        assert.equal(actualPl.userId, 'main_userid');
-        assert.equal(actualPl.username, 'main_username');
+        assert.deepStrictEqual(jwt.sign.firstCall.args[0], payload);
+        assert.strictEqual(jwt.sign.firstCall.args[1], 'test key');
+        assert.deepStrictEqual(jwt.sign.firstCall.args[2], { expiresIn: '2h' });
+        assert.strictEqual(actualPl.userId, 'main_userid');
+        assert.strictEqual(actualPl.username, 'main_username');
       });
     });
   });

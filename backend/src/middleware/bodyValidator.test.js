@@ -3,7 +3,7 @@
 const validation = require('./bodyValidator');
 const assert = require('assert');
 
-describe('util/validator', function() {
+describe('middleware/bodyValidator', function() {
   describe('#userSignup()', function() {
     it('should take a json string for input', function() {
       let test = {
@@ -14,10 +14,10 @@ describe('util/validator', function() {
         username: 'johnsmith1'
       };
       try {
-        validation.userSignup(JSON.stringify(test));
+        validation.userSignup(test);
       } catch (e) {
-        assert.equal(e.name, 'validation', e.stack);
-        assert.deepEqual(JSON.parse(e.message), ['invalid_email']);
+        assert.strictEqual(e.name, 'validation', e.stack);
+        assert.strictEqual(e.message, 'invalid_email');
       }
     });
 
@@ -25,22 +25,22 @@ describe('util/validator', function() {
       try {
         validation.userSignup(null);
       } catch(e) {
-        assert.equal(e.name, 'validation', e.stack);
-        assert.deepEqual(JSON.parse(e.message), ['invalid_body']);
+        assert.strictEqual(e.name, 'validation', e.stack);
+        assert.strictEqual(e.message, 'invalid_body');
       }
 
       try {
         validation.userSignup(undefined);
       } catch(e) {
-        assert.equal(e.name, 'validation', e.stack);
-        assert.deepEqual(JSON.parse(e.message), ['invalid_body']);
+        assert.strictEqual(e.name, 'validation', e.stack);
+        assert.strictEqual(e.message, 'invalid_body');
       }
 
       try {
         validation.userSignup("");
       } catch(e) {
-        assert.equal(e.name, 'validation', e.stack);
-        assert.deepEqual(JSON.parse(e.message), ['invalid_body']);
+        assert.strictEqual(e.name, 'validation', e.stack);
+        assert.strictEqual(e.message, 'invalid_body');
       }
     });
 
@@ -55,8 +55,8 @@ describe('util/validator', function() {
       try {
         validation.userSignup(test);
       } catch (e) {
-        assert.equal(e.name, 'validation', e.stack);
-        assert.deepEqual(JSON.parse(e.message), ['invalid_email']);
+        assert.strictEqual(e.name, 'validation', e.stack);
+        assert.strictEqual(e.message, 'invalid_email');
       }
     });
 
@@ -64,15 +64,15 @@ describe('util/validator', function() {
       try {
         validation.userSignup({});
       } catch (e) {
-        assert.equal(e.name, 'validation', e.stack);
-        assert.deepEqual(JSON.parse(e.message), ['invalid_email', 'invalid_firstname', 'invalid_lastname', 'invalid_username', 'invalid_password']);
+        assert.strictEqual(e.name, 'validation', e.stack);
+        assert.strictEqual(e.message, 'invalid_email; invalid_firstname; invalid_lastname; invalid_username; invalid_password');
       }
     });
   });
 
   describe('#sanitize()', function() {
     it('should escape a string', function() {
-      assert.equal(validation.sanitize('<html>'), '&lt;html&gt;');
+      assert.strictEqual(validation.sanitize('<html>'), '&lt;html&gt;');
     });
   
     it('should escape >, <, &, \', \", / recursively', function() {
@@ -89,7 +89,7 @@ describe('util/validator', function() {
         e: 'another valid'
       }
       let actual = validation.sanitize(test);
-      assert.deepEqual(actual, expect);
+      assert.deepStrictEqual(actual, expect);
     });
   });
 });

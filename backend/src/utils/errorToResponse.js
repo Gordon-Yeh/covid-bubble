@@ -1,6 +1,6 @@
 'use strict';
 
-const { Failure } = require('../models/response');
+const { Failure } = require('./response');
 
 function errorToResponse(err) {
   if (err.name === 'validation')

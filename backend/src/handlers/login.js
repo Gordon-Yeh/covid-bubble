@@ -1,7 +1,7 @@
 'use strict';
 const user = require('../controllers/user');
 const conn = require('../controllers/connection');
-const response = require('../models/response');
+const response = require('../utils/response');
 const validation = require('../middleware/bodyValidator');
 const session = require('../middleware/session');
 const errorToResponse = require('../utils/errorToResponse');

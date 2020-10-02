@@ -11,7 +11,7 @@ describe('utils/cookies', function() {
       sinon.stub(Date, 'now').returns(fixed.valueOf());
       let threeDays = 3*24*60*60*1000;
       let result = cookies.stringify('id', 'a3fWa', threeDays);
-      assert.strictEqual(result, 'id=a3fWa; Expires=Sat, 17 Jun 2017 07:00:00 GMT; Secure; HttpOnly');
+      assert.strictEqual(result, 'id=a3fWa; Expires=Sat, 17 Jun 2017 07:00:00 GMT; Secure; HttpOnly;');
     });
   });
 

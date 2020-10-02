@@ -4,7 +4,7 @@ const { handler } = require('./addConnection');
 const controller = require('../controllers/connection');
 const assert = require('assert');
 const validation = require('../middleware/bodyValidator');
-const { ValidationError } = require('../utils/error');
+const session = require('../middleware/session');
 
 describe('handlers/addConnection', function() {
   afterEach(function() {
@@ -12,15 +12,16 @@ describe('handlers/addConnection', function() {
   });
 
   describe('#handler()', function() {
-    it('should call validation -> controller with event.body content', async function() {
+    it('should call verify session -> validation -> controller with event.body content', async function() {
+      const data_event = { body: 'test_body' };
+      const data_user = { userId: 'test_user' };
+      let sessionStub = sinon.stub(session, 'verify').resolves(data_user);
       let stub = sinon.stub(controller, 'addConnections').resolves('success');
-      let valStub = sinon.stub(validation, 'addConnections').returns({
-          userId: 'id_1',
-          connections: 'test_connections'
-      });
-      await handler({ body: 'test_body' });
+      let valStub = sinon.stub(validation, 'addConnections').returns({ connections: 'test_connections' });
+      await handler(data_event);
+      sinon.assert.calledOnceWithExactly(sessionStub, data_event);
       sinon.assert.calledOnceWithExactly(valStub, 'test_body');
-      sinon.assert.calledOnceWithExactly(stub, 'id_1', 'test_connections');
+      sinon.assert.calledOnceWithExactly(stub, 'test_user', 'test_connections');
     });
   });
 });
