@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
 export default function AddNodeDialog({
-  onSubmit
+  onSubmit, onBack
 }) {
-  const [name, setName] = useState('');
+  const [name, setName] = useField('');
+  const [username, setUsername] = useField('');
+  const [email, setEmail] = useField('');
   const [knowUsername, setKnowUsername] = useState(true);
-  const [username, setUsername] = useState('');
 
   function handleSetKnowUserNameNo() {
     setKnowUsername(false);
@@ -15,9 +16,14 @@ export default function AddNodeDialog({
     setKnowUsername(true);
   }
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    onSubmit(name, username.length > 0 ? username : null);
+  }
+
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         {/* name field */}
         <div className="row g-3 align-items-center mb-3">
           <div className="col-2">
@@ -34,13 +40,13 @@ export default function AddNodeDialog({
             <label className="col-form-label">Do you know their username?</label>
           </div>
           <div className="col-auto">
-            <input className="form-check-input mr-1" type="radio" onClick={handleSetKnowUserNameYes} checked={knowUsername}/>
+            <input className="form-check-input mr-1" type="radio" onChange={handleSetKnowUserNameYes} checked={knowUsername}/>
             <label>
               Yes
             </label>
           </div>
           <div className="col-auto">
-            <input className="form-check-input mr-1" type="radio" onClick={handleSetKnowUserNameNo} checked={!knowUsername}/>
+            <input className="form-check-input mr-1" type="radio" onChange={handleSetKnowUserNameNo} checked={!knowUsername}/>
             <label>
               No
             </label>
@@ -69,7 +75,7 @@ export default function AddNodeDialog({
               <label className="col-form-label">Their email</label>
             </div>
             <div className="col-6">
-              <input type="email" className="form-control" value={username} onChange={setUsername}/>
+              <input type="email" className="form-control" value={email} onChange={setEmail}/>
             </div>
             <div className="col-3">
               <button type="button" className="btn btn-warning btn-signup">
@@ -82,7 +88,12 @@ export default function AddNodeDialog({
 
         <div className="row g-3 justify-content-end mt-3 mb-3 mr-2">
           <div className="col-auto">
-            <button type="button" onSubmit={onSubmit} className="btn btn-primary btn-signup">
+            <button type="button" className="btn btn-light btn-custom" onClick={onBack}>
+              Back
+            </button>
+          </div>
+          <div className="col-auto">
+            <button type="submit" className="btn btn-primary btn-signup">
               Add
             </button>
           </div>
@@ -92,6 +103,15 @@ export default function AddNodeDialog({
   );
 }
 
+function useField(initial) {
+  let [state, setState] = useState(initial);
+  function setStateFromInput(e) {
+    setState(e.target.value);
+  }
+  return [state, setStateFromInput];
+}
+
 AddNodeDialog.defaultProps = {
-  onSubmit: () => {}
+  onSubmit: () => {},
+  onBack: () => {}
 };

@@ -19,7 +19,7 @@ export default function DashboardDialog({
           onClick={onAddNode}
         >
           Add more
-        </button>by construction in JavaScript it is not implemented as text but as binary. There is no reason to show the binary code that implements that function because it is not readable and it might not even be available
+        </button>
       </p>
     </div>
   )

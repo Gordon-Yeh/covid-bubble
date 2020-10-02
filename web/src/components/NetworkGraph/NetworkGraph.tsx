@@ -49,35 +49,47 @@ export default function NetworkGraph(props) {
   );
 }
 
-function getInitalPlacements(graph, root, width, height) : [ Node[], Link[] ]{
-  let center = [width/2, height/2],
-      vert:string[] = Object.keys(graph);
+function getInitalPlacements(graph, root, width, height) : [ Node[], Link[] ] {
+  const center = [width/2, height/2],
+      vert:string[] = Object.keys(graph),
+      cirRadius = 100
+
   root = root ? root : vert[Math.floor(Math.random() * vert.length)];
-  let queue:string[] = [root],
-      _nodes:Node[] = [],
-      _links:Link[] = [],
-      lvl = 1,
-      cirRadius = 100,
+
+  let lvl = 1,
+      queue:string[] = [root.id],
       visited = {
-        [root]: { id: root, x: center[0], y: center[1] }
+        [root.id]: { id: root.id, x: center[0], y: center[1] }
       };
+
+  let _nodes:Node[] = [
+        { id: root.id, x: center[0], y: center[1], data: {...root} }
+      ],
+      _links:Link[] = [];
 
   // perform dfs starting at root
   while (queue.length > 0) {
     let n = queue.length;
+    let childrenOnLvl = queue
+          .map(p => graph[p] === undefined ?  0 : graph[p].length)
+          .reduce((pv, v) => pv + v, 0);
+    let childrenVisted = 0;
+
     for (let i = 0; i < n; i++) {
       let parent = queue.shift();
       console.log('checking node:', parent);
-      if (parent === undefined)
+      if (parent === undefined || graph[parent] === undefined)
         continue;
-
       let parentN = visited[parent];
+
+      // traverse through the children of the parent
       for (let j = 0; j < graph[parent].length; j++) {
         let child = graph[parent][j];
         console.log('child:', child);
         let childN;
-        if (!visited[child]) {
-          let angle = j * (2 * Math.PI / graph[parent].length);
+        // only create a graph node if the child hasn't been visited
+        if (!visited[child.id]) {
+          let angle = (2 * Math.PI / childrenOnLvl) * childrenVisted++;
           let x = center[0] + Math.sin(angle) * (cirRadius * lvl);
           let y = center[1] + Math.cos(angle) * (cirRadius * lvl);
           console.log(`position (${x}, ${y})`);
@@ -94,6 +106,7 @@ function getInitalPlacements(graph, root, width, height) : [ Node[], Link[] ]{
           console.log('already visited');
           childN = visited[child.id];
         }
+        // always create a link from parent -> child
         _links.push({
           source: parent, target: child.id,
           x1: parentN.x, y1: parentN.y,

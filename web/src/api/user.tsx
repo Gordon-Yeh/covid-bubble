@@ -1,6 +1,6 @@
-const API_ADDR:string = `${window.location.origin}/${process.env.NODE_ENV}`;
+import { API_ADDR, checkStatus } from './common';
 
-export interface SignupForm {
+interface SignupForm {
   firstName: string;
   lastName: string;
   email: string;
@@ -8,28 +8,16 @@ export interface SignupForm {
   password: string;
 }
 
-export interface SignupResponse {
-  
+interface SignupResponse {
+  user: object;
 }
 
-export async function checkStatus(res:Response) {
-  if (res.status >= 200 && res.status < 300) {
-    return res.json();
-  } else {
-    return res
-      .json()
-      .then((body) => {
-        console.log('res.body', body);
-        throw new Error(body.message);
-      });
-  }
+interface LoginResponse {
+  bubble: object;
+  user: object;
 }
 
-function saveSession(token:string) {
-  // store session token in cookie
-}
-
-export async function signup(form:SignupForm) {
+export async function signup(form:SignupForm) : Promise<SignupResponse> {
   return fetch(`${API_ADDR}/user/signup`, {
         method: 'POST',
         body: JSON.stringify(form),
@@ -38,7 +26,7 @@ export async function signup(form:SignupForm) {
     .then(checkStatus);
 }
 
-export async function login(email, password) {
+export async function login(email, password) : Promise<LoginResponse> {
   let body = { email, password };
 
   return fetch(`${API_ADDR}/user/login`, {

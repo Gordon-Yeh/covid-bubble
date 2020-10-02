@@ -12,7 +12,9 @@ export default function SignupDialog({
 
 console.log('new state!', firstName, lastName, email, username, password, showPassword);
 
-  function handleSubmit() {
+  function handleSubmit(e) {
+    e.preventDefault();
+
     onSubmit({
       firstName, lastName, email, username, password
     });
@@ -23,7 +25,7 @@ console.log('new state!', firstName, lastName, email, username, password, showPa
   }
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       {/* first name field */}
       <div className="row g-3 align-items-center mb-3">
         <div className="col-3">
@@ -131,7 +133,7 @@ console.log('new state!', firstName, lastName, email, username, password, showPa
           <button type="button" className="btn btn-light mr-3" onClick={onBack}>
             Back
           </button>
-          <button type="submit" className="btn btn-warning" onSubmit={handleSubmit}>
+          <button type="submit" className="btn btn-warning">
             Signup
           </button>
         </div>

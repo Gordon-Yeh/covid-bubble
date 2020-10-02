@@ -2,50 +2,52 @@ import React, { useState } from 'react';
 import './DialogBox.scss';
 import { LoginDialog, LandingDialog, SignupDialog, AddNodeDialog, DashboardDialog } from 'components/Dialogs';
 import * as userAPI from 'api/user';
+import * as nodeAPI from 'api/node';
 
 enum Dialog { Login, Landing, Signup, AddNode, Dashboard };
 
 export default function DialogBox({
-  selectedNode, bubbleSize, setNetwork, setUser
+  selectedNode, bubbleSize, setBubble, setUser
 }) {
   const [ dialog, setDialog ] = useState(Dialog.Landing);
+  const [ error, setError ] = useState(null);
 
-  function handleSignup(form) {
+  async function handleSignup(form) {
     console.log('handleSignup');
-    // validate form
-    // submit with network request
-    // await for respond
-    // success: store token, redirect to dashboard
-    // failure: show error message
+    try {
+      let data = await userAPI.signup(form);
+      console.log(data);
+      setUser(data.user);
+      switchDialog(Dialog.Dashboard);
+    } catch (e) {
+      console.log(e);
+      setError(e.message);
+    }
   }
 
   async function handleLogin(email, password) {
     console.log('handleLogin');
-    // validate
-    // submit with network request
-    // await for respond
-    // success:
-    //    - store token
-    //    - populate network graph
-    // failure: show error message
     try {
       let data = await userAPI.login(email, password);
-      console.log(data);
-      setNetwork(data.connections);
+      setBubble(data.bubble);
       setUser(data.user);
-      setDialog(Dialog.Dashboard);
+      switchDialog(Dialog.Dashboard);
     } catch (e) {
       console.log(e);
+      setError(e.message);
     }
   }
 
-  function handleAddNode(node) {
+  async function handleAddNode(name, username) {
     console.log('handleAddNode');
-    // validate name
-    // submit network request
-    // await for response
-    // success: refresh graph
-    // failure: show error message
+    try {
+      let data = await nodeAPI.addNode(name, username);
+      setBubble(data.bubble);
+      switchDialog(Dialog.Dashboard);
+    } catch (e) {
+      console.log(e);
+      setError(e.message);
+    }
   }
 
   function handleEmailInvite(email) {
@@ -54,46 +56,57 @@ export default function DialogBox({
     // always: show success message "Invite has been successfully sent"
   }
 
+  function switchDialog(dlg: Dialog) {
+    setError(null);
+    setDialog(dlg);
+  }
+
   let DialogToRender:JSX.Element;
   switch (dialog) {
     case Dialog.Login:
       DialogToRender =
         <LoginDialog
           onSubmit={handleLogin}
-          onBack={() => setDialog(Dialog.Landing)}
+          onBack={() => switchDialog(Dialog.Landing)}
         />;
       break;
     case Dialog.Signup:
       DialogToRender =
         <SignupDialog
           onSubmit={handleSignup}
-          onBack={() => setDialog(Dialog.Landing)}
+          onBack={() => switchDialog(Dialog.Landing)}
         />;
       break;
     case Dialog.AddNode:
       DialogToRender =
         <AddNodeDialog
           onSubmit={handleAddNode}
+          onBack={() => switchDialog(Dialog.Dashboard)}
         />;
       break;
     case Dialog.Dashboard:
       DialogToRender =
         <DashboardDialog
           bubbleSize={bubbleSize}
-          onAddNode={() => setDialog(Dialog.AddNode)}
+          onAddNode={() => switchDialog(Dialog.AddNode)}
         />;
       break;
     default:
       DialogToRender =
         <LandingDialog
-          onLogin={() => setDialog(Dialog.Login)}
-          onSignup={() => setDialog(Dialog.Signup)}
-          onNoAccount={() => setDialog(Dialog.Dashboard)}
+          onLogin={() => switchDialog(Dialog.Login)}
+          onSignup={() => switchDialog(Dialog.Signup)}
+          onNoAccount={() => switchDialog(Dialog.Dashboard)}
         />;
   }
 
   return (
     <div className="box">
+      { error &&
+          <div className="alert alert-warning">
+            {error}
+          </div>
+      }
       {DialogToRender}
     </div>
   );
@@ -102,6 +115,6 @@ export default function DialogBox({
 DialogBox.defaultProps = {
   selectedNode: null,
   bubbleSize: 1,
-  setNetwork: _ => {},
+  setBubble: _ => {},
   setUser: () => {}
 };
