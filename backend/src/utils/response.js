@@ -14,7 +14,7 @@ function Success(body, token=null) {
 
 function Failure(status, message) {
   this.statusCode = status;
-  this.body = JSON.stringify({ error: message });
+  this.body = JSON.stringify({ message });
 }
 
 function success(body, token=null) {

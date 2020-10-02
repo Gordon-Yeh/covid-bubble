@@ -17,11 +17,17 @@ Used register a user onto the service.
 }
 ```
 ### Success Response
-**Status** : `200`  
+**Status** : `200` 
+**Headers**  
+```
+{
+  "Set-Cookie": "cobu_sessionToken={token}; expiry={date}; Secure; HttpOnly;"
+}
+``` 
 **Body**
 ```
 {
-  "token": ""
+  "user": <user>
 }
 ```
 ### Error Response
@@ -30,7 +36,7 @@ Used register a user onto the service.
 **Body**:
 ```
 {
-  "errors": [ "invalid_email" | "invalid_password" | "invalid_firstname" | "invalid_lastname" ]
+  "message": "invalid_email; invalid_password; invalid_firstname; invalid_lastname"
 }
 ```
 
@@ -49,12 +55,17 @@ Used to acquire a session token with email and password credentials.
 ```
 ### Success Response
 **Status** : `200`  
+**Headers**  
+```
+{
+  "Set-Cookie": "cobu_sessionToken={token}; expiry={date}; Secure; HttpOnly;"
+}
+```
 **Body**
 ```
 {
-  "token": "",
-  "user": "",
-  "connections": ""
+  "user": <user>,
+  "bubble": <bubble>
 }
 ```
 ### Error Response
@@ -63,7 +74,7 @@ Used to acquire a session token with email and password credentials.
 **Body**:
 ```
 {
-  "errors": [ "invalid_email" | "invalid_password" ]
+  "message": "invalid_email; invalid_password"
 }
 ```
 **Status** : `401`    
@@ -71,7 +82,7 @@ Used to acquire a session token with email and password credentials.
 **Body**:
 ```
 {
-  "errors": [ "invalid_credentials" ]
+  "message": "invalid_credentials"
 }
 ```
 
@@ -97,18 +108,7 @@ Add first degree connections to user's network.
 **Body**
 ```
 {
-  "connections": {
-    "[linkedUsername1]": [
-      {
-        "name": "[name_of_user1_in_network]",
-        "username": "[username_of_user1_in_network]"
-      },
-      ...
-    ],
-    "[linkedUsername2]": [ ... ],
-    "[name_of_user1_in_network]": [ ... ]
-    ...
-  }
+  "bubble": <bubble>
 }
 ```
 ### Error Response
@@ -117,7 +117,7 @@ Add first degree connections to user's network.
 **Body**:
 ```
 {
-  "errors": [ "invalid_email" | "invalid_password" ]
+  "message": "invalid_email; invalid_password"
 }
 ```
 **Status** : `401`    
@@ -125,34 +125,23 @@ Add first degree connections to user's network.
 **Body**:
 ```
 {
-  "errors": [ "unauthorized" ]
+  "message": "unauthorized"
 }
 ```
 
 ## Get Connections
-Get the user's entire network.  
+Get the user's entire bubble.  
 
 **URL** : `/user/connections`  
 **Method** : `GET`  
 **Auth required** : YES  
 ### Success Response
 **Status** : `200`  
-**Details** : returns a adjacency list of your entire network  
+**Details** : returns a adjacency list of your entire bubble  
 **Body**
 ```
 {
-  "connections": {
-    "[your_username]": [
-      {
-        "name": "[name_of_user1_in_network]",
-        "username": "[username_of_user1_in_network]"
-      },
-      ...
-    ],
-    "[username_of_user1_in_network]": [ ... ],
-    "[username_of_user2_in_network]": [ ... ],
-    ...
-  }
+  "bubble": <bubble>
 }
 ```
 ### Error Response
@@ -161,6 +150,33 @@ Get the user's entire network.
 **Body**:
 ```
 {
-  "errors": [ "unauthorized" ]
+  "message": "unauthorized"
+}
+```
+
+# Data Format
+**Bubble**  
+```
+<bubble> {
+  "[your_id]": [
+    {
+      "name": "[name_of_user1_in_bubble]",
+      "id": "[id_of_user1_in_bubble]"
+    },
+    ...
+  ],
+  "[id_of_user1_in_bubble]": [ ... ],
+  "[id_of_user2_in_bubble]": [ ... ],
+  ...
+}
+```
+**User**  
+```
+<user> {
+  "email": <string>,
+  "id": <string>,
+  "username": <string>,
+  "firstName": <string>,
+  "lastName": <string>
 }
 ```

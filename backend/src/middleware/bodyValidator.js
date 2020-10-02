@@ -17,7 +17,7 @@ function userSignup(body) {
     errors.push('invalid_firstname');
   if (!body.lastName || !validator.isAlphanumeric(body.lastName))
     errors.push('invalid_lastname');
-  if (!body.username || !validator.isAlphanumeric(body.username))
+  if (!body.username || !isName(body.username))
     errors.push('invalid_username');
   if (!body.password || body.password.length < 8)
     errors.push('invalid_password');

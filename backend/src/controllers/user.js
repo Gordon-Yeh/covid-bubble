@@ -15,7 +15,7 @@ async function createUser(email, password, firstName, lastName, username) {
     // TODO: make sure this syntax SQL escape the fields
     await db.query('INSERT INTO Users (user_id, email, first_name, last_name, password, username) VALUES (?, ?, ?, ?, ?, ?)', newUser);
     // TODO: parse result from db and result something more presentable
-    return { userId: newUser[0], email, firstName, lastName, username };
+    return { id: newUser[0], email, firstName, lastName, username };
   } catch (e) {
     if (db.isDupEmailError(e)) {
       LOG('createUser:', 'duplicate email', email);
@@ -43,7 +43,7 @@ async function authenticate(email, password) {
     throw AuthError('invalid_credentials');
   }
   return {
-    userId: results[0].user_id,
+    id: results[0].user_id,
     firstName: results[0].first_name,
     lastName: results[0].last_name,
     username: results[0].username,
