@@ -1,4 +1,4 @@
-import { API_ADDR, checkStatus } from './common';
+import { API_ADDR, checkStatus, CORS_HEADER } from './common';
 
 interface AddNodeResponse {
   bubble: object;
@@ -11,8 +11,10 @@ export async function addNode(name:string, username:string) : Promise<AddNodeRes
 
   return fetch(`${API_ADDR}/user/connections`, {
       method: 'POST',
+      headers: CORS_HEADER,
+      mode: 'cors',
+      credentials: 'include',
       body: JSON.stringify([ node ]),
-      credentials: 'same-origin'
     })
     .then(checkStatus);
 }
