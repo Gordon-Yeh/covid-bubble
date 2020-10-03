@@ -9,7 +9,8 @@ async function verify(event) {
   // expecting format 
   // header.cookie: "session:${jwt};"
   LOG('event:', event);
-  let cookies = _cookie.parse(event.headers.cookie);
+  let cookies = _cookie.parse(event.headers.cookie ? event.headers.cookie : event.headers.Cookie);
+
   LOG('session.verify:', 'cookies=', cookies);
   if (!cookies['cobu_sessionToken']) {
     LOG('session.verify:', 'cobu_sessionToken could not be found in cookies');

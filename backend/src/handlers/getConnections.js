@@ -9,7 +9,7 @@ async function handler(event) {
   try {
     let payload = await session.verify(event);
     let result = await controller.getConnections(payload.userId);
-    return new response.Success({ bubble: result });
+    return response.success(event, { bubble: result });
   } catch (e) {
     LOG('getConnections.handler', e);
     return errorToResponse(e);

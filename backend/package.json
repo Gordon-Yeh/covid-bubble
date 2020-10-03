@@ -16,7 +16,9 @@
   },
   "scripts": {
     "start": "sls offline --stage development --httpPort 8080 --httpsProtocol .dev/",
-    "test": "mocha src/**/*.test.js"
+    "test": "mocha src/**/*.test.js",
+    "build-stagging": "sls package --stage stagging",
+    "deploy-stagging": "sls deploy --stage stagging"
   },
   "author": "",
   "license": "ISC"

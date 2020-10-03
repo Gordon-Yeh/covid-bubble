@@ -11,8 +11,8 @@ async function handler(event) {
   try {
     let user = validation.userSignup(event.body);
     let result = await userController.createUser(user.email, user.password, user.firstName, user.lastName, user.username);
-    let sessionToken = await session.create({ userId: result.userId, username: result.username });
-    return response.success({ user: result }, sessionToken);
+    let sessionToken = await session.create({ userId: result.id, username: result.username });
+    return response.success(event, { user: result }, sessionToken);
   } catch (e) {
     LOG(e);
     return response.errorToResponse(e);

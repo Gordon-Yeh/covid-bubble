@@ -14,7 +14,7 @@ async function handler(event) {
     let body = validation.addConnections(event.body);
     await controller.addConnections(payload.userId, body);
     let connections = await controller.getConnections(payload.userId);
-    let res = new response.Success({ bubble: connections })
+    let res = response.success(event, { bubble: connections })
     LOG('addConnection.handler:', 'respond with', res);
     return res;
   } catch (e) {

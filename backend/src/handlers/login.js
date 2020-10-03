@@ -15,7 +15,7 @@ async function handler(event) {
     let user = await userController.authenticate(body.email, body.password);
     let connections = await conn.getConnections(user.id);
     let sessionToken = await session.create({ userId: user.id, username: user.username });
-    let res = new response.Success({ user, bubble: connections }, sessionToken);
+    let res = response.success(event, { user, bubble: connections }, sessionToken);
     LOG('login.handler', 'responding with', res);
     return res;
   } catch (e) {

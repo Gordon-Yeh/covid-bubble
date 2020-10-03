@@ -1,12 +1,17 @@
 'use strict';
 
 const { stringifyToken } = require('./cookies');
+const { LOG } = require('./log');
 
-function Success(body, token=null) {
-  this.headers = {};
+function Success(body, origin, token=null) {
+  this.headers = {
+    // allows other addresses different than the server's to make requests
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
+    'Access-Control-Allow-Credentials': true
+  };
   if (token) {
     this.headers['Set-Cookie'] = stringifyToken(token);
-    this.headers['Access-Control-Allow-Origin'] = '*';
   }
   this.statusCode = 200;
   this.body = JSON.stringify(body);
@@ -17,8 +22,8 @@ function Failure(status, message) {
   this.body = JSON.stringify({ message });
 }
 
-function success(body, token=null) {
-  return new Success(body, token);
+function success(event, body, token=null) {
+  return new Success(body, event.headers.origin, token);
 }
 
 function errorToResponse(err) {

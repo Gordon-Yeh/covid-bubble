@@ -1,7 +1,7 @@
 const SESSION_TIMEOUT = 2*24*60*60*1000; // 2 days
 
 function stringify(key, value, expiry) {
-  return `${key}=${value}; Expires=${new Date(Date.now() + expiry).toUTCString()}; Secure; HttpOnly;`;
+  return `${key}=${value}; Expires=${new Date(Date.now() + expiry).toUTCString()}; SameSite=None; Secure; HttpOnly;`;
 }
 
 function stringifyToken(token) {
