@@ -3,11 +3,19 @@ import './DialogBox.scss';
 import { LoginDialog, LandingDialog, SignupDialog, AddNodeDialog, DashboardDialog } from 'components/Dialogs';
 import * as userAPI from 'api/user';
 import * as nodeAPI from 'api/node';
+import dialogText from 'data/dialog.json';
 
-enum Dialog { Login, Landing, Signup, AddNode, Dashboard };
+enum Dialog {
+    Login = 'Login',
+    Landing = 'Landing',
+    Signup = 'Signup',
+    AddNode = 'AddNode',
+    Dashboard = 'Dashboard'
+  };
 
 export default function DialogBox({
-  selectedNode, bubbleSize, setBubble, setUser
+  selectedNode,
+    bubbleSize, setBubble, setUser
 }) {
   const [ dialog, setDialog ] = useState(Dialog.Landing);
   const [ error, setError ] = useState(null);
@@ -102,12 +110,18 @@ export default function DialogBox({
 
   return (
     <div className="box">
-      { error &&
-          <div className="alert alert-warning">
-            {error}
-          </div>
-      }
-      {DialogToRender}
+      <div className="dialog-heading">
+        <div className="header">{dialogText.headers[dialog]}</div>
+        <div className="subtitle">{dialogText.subtitles[dialog]}</div>
+      </div>
+      <div className="content">
+        { error &&
+            <div className="alert alert-warning">
+              {error}
+            </div>
+        }
+        {DialogToRender}
+      </div>
     </div>
   );
 }

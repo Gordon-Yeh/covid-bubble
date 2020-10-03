@@ -1,8 +1,26 @@
 @import "../../styles/colors";
 
 .box {
-  padding: 50px 60px 40px 60px;
   border: 1px solid #797979;
   max-width: 600px;
   border-radius: 10px;
+}
+
+.content {
+  margin: 15px 50px 40px 50px;
+}
+
+.dialog-heading {
+  margin: 15px 20px 30px 20px;
+  padding: 0px 10px 5px 10px;
+
+  .header {
+    font-size: 26px;
+  } 
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  border-bottom: 1px solid;
 }
