@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function GraphNode({
-  radius, color, x, y, onClick
+  radius, label, color, x, y, onClick
 }) {
 
   function handleMouseOver(e) {
@@ -15,18 +15,26 @@ export default function GraphNode({
   }
 
   return (
-    <circle
-      className="node"
-      r={radius}
-      cx={x}
-      cy={y}
-      fill={color}
-      onMouseOver={handleMouseOver}
-      onMouseOut={handleMouseOut}
-      onClick={onClick}
-      stroke="white"
-      strokeWidth="2"
-    />
+    <g>
+      <circle
+        className="node"
+        r={radius}
+        cx={x}
+        cy={y}
+        fill={color}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
+        onClick={onClick}
+        stroke="white"
+        strokeWidth="2"
+      />
+      <text
+        x={x} y={y} 
+        textAnchor="middle"
+        stroke="white"
+        strokeWidth="1px"
+      > {label} </text>
+    </g>
   )
 }
 

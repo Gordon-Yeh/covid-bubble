@@ -1,6 +1,5 @@
 # In Progress
 - [] improve node position in network graph
-- [] add heading and description to dialog box
 
 # Back Log
 - [] display user friendly alerts during an error in dialog box
@@ -11,3 +10,4 @@
 - [] send bubble alerts
 
 # Completed
+- [x] add heading and description to dialog box

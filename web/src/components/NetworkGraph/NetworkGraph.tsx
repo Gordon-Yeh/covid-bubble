@@ -22,7 +22,7 @@ interface Node {
 export default function NetworkGraph({
   network, root, width, height, linkWidth, nodeRad
 }) {
-  const [ nodes, links ] = getInitalPlacements(network, root, width, height)
+  const [ nodes, links ] = getNodePlacements(network, root, width, height)
   const [ selectedNodeId, setSelectedNodeId ] = useState(null);
 
   function getNodeColor(node) : string {
@@ -44,101 +44,107 @@ export default function NetworkGraph({
   }
 
   return (
-    <svg width={width} height={height} overflow="auto">
-      {links.map((link, index) =>(
-        <line
-          x1={link.x1}
-          y1={link.y1}
-          x2={link.x2}
-          y2={link.y2}
-          key={`line-${index}`}
-          strokeWidth={linkWidth}
-          stroke={getLinkColor(link)}
-        />
-      ))}
-      {nodes.map((node, index) =>(
-        <GraphNode
-          radius={nodeRad}
-          x={node.x}
-          y={node.y}
-          color={getNodeColor(node)}
-          key={index}
-          onClick={() => setSelectedNodeId(node.id)}
-        />
-      ))}
-    </svg>
+    <div className="graph">
+      <svg width={width} height={height} overflow="auto">
+        {links.map((link, index) =>(
+          <line
+            x1={link.x1}
+            y1={link.y1}
+            x2={link.x2}
+            y2={link.y2}
+            key={`line-${index}`}
+            strokeWidth={linkWidth}
+            stroke={getLinkColor(link)}
+          />
+        ))}
+        {nodes.map((node, index) =>(
+          <GraphNode
+            radius={nodeRad}
+            label={node.id}
+            x={node.x}
+            y={node.y}
+            color={getNodeColor(node)}
+            key={index}
+            onClick={() => setSelectedNodeId(node.id)}
+          />
+        ))}
+      </svg>
+    </div>
   );
 }
 
-function getInitalPlacements(graph, root, width, height) : [ Node[], Link[] ] {
-  const center = [width/2, height/2],
+interface DBNode {
+  id: string;
+}
+
+type range = [number, number];
+
+function getNodePlacements(graph, root, width, height) : [ Node[], Link[] ] {
+  const center:range = [width/2, height/2],
       vert:string[] = Object.keys(graph),
-      cirRadius = 100
+      orbitRadius = 100
 
   root = root ? root : vert[Math.floor(Math.random() * vert.length)];
-
-  let lvl = 1,
-      queue:string[] = [root.id],
+  let rNode: Node = { id: root.id, x: center[0], y: center[1], data: {...root} },
       visited = {
-        [root.id]: { id: root.id, x: center[0], y: center[1] }
+        [root.id]: rNode
       };
 
-  let _nodes:Node[] = [
-        { id: root.id, x: center[0], y: center[1], data: {...root} }
-      ],
+  let _nodes:Node[] = [ rNode ],
       _links:Link[] = [];
 
-  // perform dfs starting at root
-  while (queue.length > 0) {
-    let n = queue.length;
-    let childrenOnLvl = queue
-          .map(p => graph[p] === undefined ?  0 : graph[p].length)
-          .reduce((pv, v) => pv + v, 0);
-    let childrenVisted = 0;
+  getNodePos(graph, root.id, _nodes, _links, visited, [0, 2*Math.PI], 1, orbitRadius, center);
 
-    for (let i = 0; i < n; i++) {
-      let parent = queue.shift();
-      console.log('checking node:', parent);
-      if (parent === undefined || graph[parent] === undefined)
-        continue;
-      let parentN = visited[parent];
+  return [ _nodes, _links ];
+}
 
-      // traverse through the children of the parent
-      for (let j = 0; j < graph[parent].length; j++) {
-        let child = graph[parent][j];
-        console.log('child:', child);
-        let childN;
-        // only create a graph node if the child hasn't been visited
-        if (!visited[child.id]) {
-          let angle = (2 * Math.PI / childrenOnLvl) * childrenVisted++;
-          let x = center[0] + Math.sin(angle) * (cirRadius * lvl);
-          let y = center[1] + Math.cos(angle) * (cirRadius * lvl);
-          console.log(`position (${x}, ${y})`);
 
-          childN = {
-            id: child.id, x, y, data: {
-              ...child
-            }
-          };
-          _nodes.push(childN);
-          queue.push(child.id);
-          visited[child.id] = childN;
-        } else {
-          console.log('already visited');
-          childN = visited[child.id];
+function getNodePos(
+  graph: {[key:string]: DBNode[]}, nodeId: string,
+  nodes: Node[], links: Link[], visited: {[key:string]: Node},
+  partition: range,
+  level: number, orbitRadius: number,
+  center: range
+) {
+  console.log(`level=${level}, checking node: ${nodeId}`);
+  if (nodeId === undefined || graph[nodeId] === undefined)
+    return;
+  let pNode = visited[nodeId];
+  let children = graph[nodeId];
+  let toVisit:string[] = [];
+  for (let i = 0; i < children.length; i++) {
+    let c = children[i];
+    console.log(`parent: ${nodeId}, child: ${c.id}`);
+    let cNode: Node;
+    if (!visited[c.id]) {
+      let slice = (partition[1] - partition[0]) / children.length;
+      let angle = (i+1)*slice;
+      let x = center[0] + Math.sin(angle-slice/2) * orbitRadius * Math.pow(level, 1.3);
+      let y = center[1] + Math.cos(angle-slice/2) * orbitRadius * Math.pow(level, 1.3);
+      console.log(`position (${x}, ${y})`);
+      cNode = {
+        id: c.id, x, y, data: {
+          ...c
         }
-        // always create a link from parent -> child
-        _links.push({
-          source: parent, target: child.id,
-          x1: parentN.x, y1: parentN.y,
-          x2: childN.x, y2: childN.y
-        });
-      }
+      };
+      nodes.push(cNode);
+      visited[c.id] = cNode;
+      toVisit.push(c.id);
+    } else {
+      cNode = visited[c.id];
+      console.log('already visited');
     }
-    lvl++;
+    links.push({
+      source: nodeId, target: c.id,
+      x1: pNode.x, y1: pNode.y,
+      x2: cNode.x, y2: cNode.y
+    });
   }
 
-  return [ _nodes, _links ]
+  let slice = (partition[1] - partition[0]) / children.length;
+  for (let i = 0; i < toVisit.length; i++) {
+    getNodePos(graph, toVisit[i], nodes, links, visited, [slice*i, slice*(i+1)], level+1, orbitRadius, center);
+  }
 }
 
 NetworkGraph.defaultProps = {

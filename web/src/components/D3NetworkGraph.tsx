@@ -1,53 +1,187 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
+import colors from 'data/colors.json';
 import * as d3 from 'd3';
+import './D3NetworkGraph.scss';
 
-export default function NetworkGraph(props) {
-  const [nodes, setNodes] = useState(props.nodes);
-  const [links, setLinks] = useState(props.links);
-  
+interface Link {
+  source: string;
+  target: string;
+}
+
+interface Node {
+  id: string;
+  data: object;
+}
+
+export default function NetworkGraph({
+  width, height, graph, root,
+  linkDistance, forceStrength, nodeRadius, linkWidth,
+  setSelectedNode
+}) {
+  // const [ selectedNode, setSelectedNode ] = useState(null);
+  const svgRef = useRef(null);
+
   useEffect(() => {
-    let simNodes = [...props.nodes];
-    let simLinks = [...props.links];
+    const [ nodes, links ] = parseGraph(graph, root);
+    const svg = d3.select(svgRef.current);
+    let lastSelected = null;
 
-    let sim = d3.forceSimulation(simNodes)
+    console.log('nodes:', nodes);
+    console.log('links:', links);
+
+    function getNodeColor(node) : string {
+      switch(node.id) {
+        case root.id:
+          return colors.primary;
+        default:
+          return colors.dark;
+      }
+    }
+
+    const simulation = d3.forceSimulation(nodes)
       .force('charge',
-          d3.forceManyBody().strength(props.forceStrength))
-      .force('link',
-          d3.forceLink().distance(props.linkDistance).links(simLinks).id(d => d.id))
-      .force("x", d3.forceX(props.width / 2))
-      .force("y", d3.forceY(props.height / 2));
-    sim.stop();
-    let interval = setInterval(() => {
-      sim.tick();
-      setNodes([...simNodes]);
-      setLinks([...simLinks]);
-    }, 50);
+          d3.forceManyBody().strength(forceStrength))
+      .force("link",
+          d3.forceLink(links).distance(linkDistance).id(d => d.id))
+      .force("charge", d3.forceManyBody())
+      .force("center", d3.forceCenter(width / 2, height / 2));
 
-    return () => clearInterval(interval);
-  });
+    const link = svg.append("g")
+        .attr("stroke", "#999")
+        .attr("stroke-opacity", 0.6)
+      .selectAll("line")
+      .data(links)
+      .join("line")
+        .attr("stroke-width", linkWidth);
 
+    const nodeGroup = svg.append("g")
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 1.5)
+      .selectAll("g")
+      .data(nodes)
+      .join("g");
+
+    const node = nodeGroup
+      .append("circle")
+      .attr("r", nodeRadius)
+      .attr("fill", getNodeColor)
+      .on('click', function(this, d) {
+        d3.select(this)
+          .style('fill', colors.secondary);
+        d3.select(lastSelected)
+          .style('fill', colors.dark);
+        lastSelected = this;
+        setSelectedNode(d.data);
+      })
+      .call(onDrag(simulation));
+
+    const label = nodeGroup
+      .append('text')
+      .text(d => d.id)
+      .attr('text-anchor', 'middle')
+      .attr('stroke-width', '1px');
+
+    node.append("title")
+      .text(d => d.id);
+
+    simulation.on("tick", () => {
+      link
+          .attr("x1", d => d.source.x)
+          .attr("y1", d => d.source.y)
+          .attr("x2", d => d.target.x)
+          .attr("y2", d => d.target.y);
+  
+      node
+          .attr("cx", d => d.x)
+          .attr("cy", d => d.y);
+      
+      label
+          .attr('x', d => d.x)
+          .attr('y', d => d.y)
+    });
+  })
+  
   return (
-    <svg width={props.width} height={props.height}>
-      {links.map((link, index) =>(
-        <line
-          x1={link.source.x}
-          y1={link.source.y}
-          x2={link.target.x}
-          y2={link.target.y}
-          key={`line-${index}`}
-          stroke="black" />
-      ))}
-      {nodes.map((node, index) =>(
-        <circle r={props.nodeRadius} cx={node.x} cy={node.y} fill="red" key={index}/>
-      ))}
-    </svg>
+    <svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      ref={svgRef}
+    ></svg>
   );
 }
 
+function parseGraph(graph, root) : [ Node[], Link[] ] {
+  if (root === null) {
+    return [ [], [] ];
+  }
+  
+  let _nodes:Node[] = [{ id: root.id, data: {...root} }],
+      _links:Link[] = [],
+      queue = [ root.id ],
+      visited = new Set();
+  
+  while (queue.length > 0) {
+    let pId = queue.shift();
+    console.log('parent:', pId);
+    if (pId === undefined || graph[pId] === undefined || visited.has(pId))
+      continue;
+    let children = graph[pId];
+    console.log('children:', children);
+    visited.add(pId);
+    for (let i = 0; i < children.length; i++) {
+      let c = children[i];
+      if (!visited.has(c.id)) {
+        _nodes.push({ id: c.id, data: { ...c } });
+        queue.push(c.id);
+      }
+      _links.push({ source: pId, target: c.id });
+    }
+    console.log('queue:', queue);
+  }
+
+  console.log('_nodes:', _nodes);
+  console.log('_links:', _links);
+  return [ _nodes, _links ];
+}
+
+function onDrag(sim) {
+  function dragstarted(event) {
+    if (!event.active) sim.alphaTarget(0.3).restart();
+    event.subject.fx = event.subject.x;
+    event.subject.fy = event.subject.y;
+  }
+  
+  function dragged(event) {
+    event.subject.fx = event.x;
+    event.subject.fy = event.y;
+  }
+  
+  function dragended(event) {
+    if (!event.active) sim.alphaTarget(0);
+    event.subject.fx = null;
+    event.subject.fy = null;
+  }
+  
+  return d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended);
+}
+
 NetworkGraph.defaultProps = {
+  // state
+  graph: {},
+  root: null,
+
+  // callback
+  setSelectedNode: () => {},
+
+  // styles
   width: 500,
   height: 500,
-  linkDistance: 10,
+  linkDistance: 300,
   forceStrength: -20,
-  nodeRadius: 5
+  nodeRadius: 30,
+  linkWidth: 3,
 };
