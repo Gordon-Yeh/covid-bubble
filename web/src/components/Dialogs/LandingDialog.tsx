@@ -7,9 +7,6 @@ export default function LandingDialog({
   return (
     <div className="text-left h5">
       <p>
-        There's currently 1 person in your bubble.
-      </p>
-      <p>
         <button
           type="button"
           className="btn btn-primary mr-3"
@@ -25,12 +22,11 @@ export default function LandingDialog({
             Signup
         </button>
       </p>
-      <p>
-        or
+      {/* <p>
         <button type="button" className="btn btn-link" onClick={onNoAccount}>
           continue without an account
         </button>
-      </p>
+      </p> */}
     </div>
   )
 };

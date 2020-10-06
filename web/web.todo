@@ -1,13 +1,14 @@
 # In Progress
-- [] improve node position in network graph
+- [] make app mobile friendly
+
 
 # Back Log
 - [] display user friendly alerts during an error in dialog box
 - [] show validation styling in forms
-- [] make app mobile friendly
 - [] dialog display for selecting a node
 - [] display bubble alerts
 - [] send bubble alerts
 
 # Completed
 - [x] add heading and description to dialog box
+- [x] improve node position in network graph

@@ -4,7 +4,7 @@ export default function DashboardDialog({
   bubbleSize, onAddNode
 }) {
   return (
-    <div className="text-left h5">
+    <div className="text-left h6">
       <p>
         There's currently&nbsp;
         <span className="text-primary text-decoration-underline">

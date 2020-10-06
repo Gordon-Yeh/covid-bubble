@@ -26,26 +26,26 @@ export default function AddNodeDialog({
       <form onSubmit={handleSubmit}>
         {/* name field */}
         <div className="row g-3 align-items-center mb-3">
-          <div className="col-2">
+          <div className="col-3 col-md-2">
             <label className="col-form-label">Name<span className="red">*</span></label>
           </div>
-          <div className="col-7">
+          <div className="col-9 col-md-8">
             <input type="text" className="form-control" value={name} onChange={setName} placeholder="name of person"/>
           </div>
         </div>
 
         {/* know username? field */}
         <div className="row g-3 align-items-center mb-3">
-          <div className="col-auto">
+          <div className="col-12 col-md-auto">
             <label className="col-form-label">Do you know their username?</label>
           </div>
-          <div className="col-auto">
+          <div className="col-3 col-md-auto">
             <input className="form-check-input mr-1" type="radio" onChange={handleSetKnowUserNameYes} checked={knowUsername}/>
             <label>
               Yes
             </label>
           </div>
-          <div className="col-auto">
+          <div className="col-3 col-md-auto">
             <input className="form-check-input mr-1" type="radio" onChange={handleSetKnowUserNameNo} checked={!knowUsername}/>
             <label>
               No
@@ -56,10 +56,10 @@ export default function AddNodeDialog({
         {/* user name field */}
         { knowUsername && (
           <div className="row g-3 align-items-center mb-3">
-            <div className="col-2">
+            <div className="col-3 col-md-2">
               <label className="col-form-label">Username</label>
             </div>
-            <div className="col-7">
+            <div className="col-9 col-md-8">
               <input type="text" className="form-control" value={username} onChange={setUsername} placeholder="username of person"/>
             </div>
             <span className="form-text">
@@ -71,13 +71,13 @@ export default function AddNodeDialog({
         { !knowUsername && (
           <div className="row g-3 align-items-center mb-3">
             <div>Invite them by email (optional)?</div>
-            <div className="col-3">
+            <div className="col-2">
               <label className="col-form-label">Their email</label>
             </div>
             <div className="col-6">
               <input type="email" className="form-control" value={email} onChange={setEmail}/>
             </div>
-            <div className="col-3">
+            <div className="col-4">
               <button type="button" className="btn btn-warning btn-signup">
                 Invite
               </button>
@@ -86,7 +86,7 @@ export default function AddNodeDialog({
         )}
 
 
-        <div className="row g-3 justify-content-end mt-3 mb-3 mr-2">
+        <div className="row g-3 justify-content-end mt-3 mb-3">
           <div className="col-auto">
             <button type="button" className="btn btn-light btn-custom" onClick={onBack}>
               Back

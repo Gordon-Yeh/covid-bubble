@@ -34,6 +34,24 @@ function App() {
         /> */}
         <NetworkGraph
           width={window.outerWidth}
+          linkDistance={() => {
+            if (window.outerWidth >= 576)
+              return 300;
+            else
+              return 150;
+          }}
+          linkWidth={() => {
+            if (window.outerWidth >= 576)
+              return 2;
+            else
+              return 3;
+          }}
+          nodeRadius={() => {
+            if (window.outerWidth >= 576)
+              return 40;
+            else
+              return 30;
+          }}
           height={window.outerHeight}
           graph={bubble}
           root={user}

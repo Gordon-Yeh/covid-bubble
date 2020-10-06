@@ -59,7 +59,7 @@ export default function SignupDialog({
         </div>
       </div>
 
-      <div className="row g-3 justify-content-end mb-3 mr-2">
+      <div className="row g-3 justify-content-end mb-3">
         <div className="col-auto">
           <button type="button" className="btn btn-light btn-custom" onClick={onBack}>
             Back

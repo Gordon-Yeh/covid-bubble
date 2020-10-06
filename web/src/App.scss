@@ -1,13 +1,30 @@
+@import "../node_modules/bootstrap/scss/functions",
+  "../node_modules/bootstrap/scss/variables",
+  "../node_modules/bootstrap/scss/mixins/breakpoints";
+
 .app {
   position: relative;
 }
 
 .dialog-box {
-  position: absolute;
+  position: fixed;
   right: 0;
-  top: 0;
   margin: 50px 50px 0 0;
   z-index: 1000;
+
+  @include media-breakpoint-up(sm) {
+    top: 0;
+    font-size: 16px;
+  }
+
+  @include media-breakpoint-down(sm) {
+    font-size: 13px;
+    margin: 0 0 0 0;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
 }
 
 .bubble-graph {

@@ -28,12 +28,12 @@ console.log('new state!', firstName, lastName, email, username, password, showPa
     <form onSubmit={handleSubmit}>
       {/* first name field */}
       <div className="row g-3 align-items-center mb-3">
-        <div className="col-3">
+        <div className="col-4 col-md-3">
           <label htmlFor="firstname" className="col-form-label">
             First Name
           </label>
         </div>
-        <div className="col-7">
+        <div className="col-8 col-md-7">
           <input
             id="firstname"
             type="text"
@@ -47,12 +47,12 @@ console.log('new state!', firstName, lastName, email, username, password, showPa
 
       {/* last name field */}
       <div className="row g-3 align-items-center mb-3">
-        <div className="col-3">
+        <div className="col-4 col-md-3">
           <label htmlFor="lastname" className="col-form-label">
-            Last Name<span className="red">*</span>
+            Last Name
           </label>
         </div>
-        <div className="col-7">
+        <div className="col-8 col-md-7">
           <input
             id="lastname"
             type="text"
@@ -67,12 +67,12 @@ console.log('new state!', firstName, lastName, email, username, password, showPa
 
       {/* email field */}
       <div className="row g-3 align-items-center mb-3">
-        <div className="col-3">
+        <div className="col-4 col-md-3">
           <label htmlFor="email" className="col-form-label">
             Email
           </label>
         </div>
-        <div className="col-7">
+        <div className="col-8 col-md-7">
           <input 
             id="emai"
             type="email" 
@@ -86,12 +86,12 @@ console.log('new state!', firstName, lastName, email, username, password, showPa
 
       {/* username field */}
         <div className="row g-3 align-items-center mb-3">
-        <div className="col-3">
+        <div className="col-4 col-md-3">
           <label htmlFor="username" className="col-form-label">
             Username
           </label>
         </div>
-        <div className="col-7">
+        <div className="col-8 col-md-7">
           <input 
             id="username"
             type="text" 
@@ -105,12 +105,12 @@ console.log('new state!', firstName, lastName, email, username, password, showPa
 
       {/* password field */}
       <div className="row g-3 align-items-center mb-3">
-        <div className="col-3">
+        <div className="col-4 col-md-3">
           <label htmlFor="password" className="col-form-label">
             Password
           </label>
         </div>
-        <div className="col-7">
+        <div className="col-6 col-md-7">
           <input 
             id="password"
             type={showPassword ? 'text' : 'password'} 
@@ -128,12 +128,12 @@ console.log('new state!', firstName, lastName, email, username, password, showPa
         </span>
       </div>
 
-      <div className="row g-3 justify-content-end mb-3 mr-2">
+      <div className="row g-3 justify-content-end mb-3">
         <div className="col-auto">
           <button type="button" className="btn btn-light mr-3" onClick={onBack}>
             Back
           </button>
-          <button type="submit" className="btn btn-warning">
+          <button type="submit" className="btn btn-warning text-white">
             Signup
           </button>
         </div>
