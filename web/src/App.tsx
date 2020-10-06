@@ -9,8 +9,8 @@ function App() {
     id: 0, email: 'demo@email.com', firstName: 'demo', lastName: 'demo', username: 'demo'
   });
   let a = getFakeNetwork()
-  const [ bubble, setBubble ] = useState(a);
-  const [ selectedNode, setSelectedNode ] = useState(null);
+  const [ bubble, setBubble ] = useState({});
+  const [ selectedNode, setSelectedNode ] = useState({});
 
   // const [ bubble, setBubble ] = useState({ [user.id]: { ...user } });
 
@@ -36,7 +36,7 @@ function App() {
           width={window.outerWidth}
           height={window.outerHeight}
           graph={bubble}
-          root={{id: 0}}
+          root={user}
         />
       </div>
     </div>

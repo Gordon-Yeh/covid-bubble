@@ -23,7 +23,7 @@ export default function NetworkGraph({
   network, root, width, height, linkWidth, nodeRad
 }) {
   const [ nodes, links ] = getNodePlacements(network, root, width, height)
-  const [ selectedNodeId, setSelectedNodeId ] = useState(null);
+  const [ selectedNodeId, setSelectedNodeId ] = useState('');
 
   function getNodeColor(node) : string {
     switch(node.id) {

@@ -24,7 +24,7 @@ export default function NetworkGraph({
   useEffect(() => {
     const [ nodes, links ] = parseGraph(graph, root);
     const svg = d3.select(svgRef.current);
-    let lastSelected = null;
+    let selectedNodeId = null;
 
     console.log('nodes:', nodes);
     console.log('links:', links);
@@ -33,10 +33,20 @@ export default function NetworkGraph({
       switch(node.id) {
         case root.id:
           return colors.primary;
+        case selectedNodeId:
+          return colors.secondary;
         default:
           return colors.dark;
       }
     }
+
+    function getLinkColor(link) : string {
+      if (link.source.id === selectedNodeId || link.target.id === selectedNodeId)
+        return colors.secondary;
+      else
+        return colors.dark;
+    }
+  
 
     const simulation = d3.forceSimulation(nodes)
       .force('charge',
@@ -47,12 +57,12 @@ export default function NetworkGraph({
       .force("center", d3.forceCenter(width / 2, height / 2));
 
     const link = svg.append("g")
-        .attr("stroke", "#999")
         .attr("stroke-opacity", 0.6)
       .selectAll("line")
       .data(links)
       .join("line")
-        .attr("stroke-width", linkWidth);
+        .attr("stroke-width", linkWidth)
+        .attr("stroke", getLinkColor);
 
     const nodeGroup = svg.append("g")
         .attr("stroke", "#fff")
@@ -65,19 +75,16 @@ export default function NetworkGraph({
       .append("circle")
       .attr("r", nodeRadius)
       .attr("fill", getNodeColor)
-      .on('click', function(this, d) {
-        d3.select(this)
-          .style('fill', colors.secondary);
-        d3.select(lastSelected)
-          .style('fill', colors.dark);
-        lastSelected = this;
+      .call(onDrag(simulation))
+      .on('click', function(this, event, d) {
+        console.log('click', this, d)
+        selectedNodeId = d.id;
         setSelectedNode(d.data);
-      })
-      .call(onDrag(simulation));
+      });
 
     const label = nodeGroup
       .append('text')
-      .text(d => d.id)
+      .text(d => d.data && d.data.name ? d.data.name : d.id)
       .attr('text-anchor', 'middle')
       .attr('stroke-width', '1px');
 
@@ -89,16 +96,24 @@ export default function NetworkGraph({
           .attr("x1", d => d.source.x)
           .attr("y1", d => d.source.y)
           .attr("x2", d => d.target.x)
-          .attr("y2", d => d.target.y);
+          .attr("y2", d => d.target.y)
+          .attr('stroke', getLinkColor);
   
       node
           .attr("cx", d => d.x)
-          .attr("cy", d => d.y);
+          .attr("cy", d => d.y)
+          .attr("fill", getNodeColor);
       
       label
           .attr('x', d => d.x)
           .attr('y', d => d.y)
     });
+
+    return () => {
+      simulation.stop();
+      link.remove();
+      nodeGroup.remove();
+    };
   })
   
   return (
@@ -116,7 +131,7 @@ function parseGraph(graph, root) : [ Node[], Link[] ] {
     return [ [], [] ];
   }
   
-  let _nodes:Node[] = [{ id: root.id, data: {...root} }],
+  let _nodes:Node[] = [{ id: root.id, data: {...root, name: 'You'} }],
       _links:Link[] = [],
       queue = [ root.id ],
       visited = new Set();
@@ -182,6 +197,6 @@ NetworkGraph.defaultProps = {
   height: 500,
   linkDistance: 300,
   forceStrength: -20,
-  nodeRadius: 30,
+  nodeRadius: 40,
   linkWidth: 3,
 };
