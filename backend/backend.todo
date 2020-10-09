@@ -1,6 +1,0 @@
-[] make integration test
-[] integrate cloud logging for debugging during staging
-[] develop API POST invite/ for sending user invite to app 
-[] develop alert API POST user/alert that will send email alert to the user's network
-[] add Alert table schema
-[] add Invite table schema
